@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import StatusJS from 'status-js-api';
 import routes from '../constants/routes';
 import ChatRoom from './ChatRoom';
+import Button from '@material-ui/core/Button';
 
 const DEFAULT_CHANNEL = "mytest";
 const status = new StatusJS();
@@ -36,12 +37,19 @@ status.connect("ws://localhost:8546");
       });
     }
 
+    sendMessage() {
+      status.sendMessage(DEFAULT_CHANNEL, "action triggered")
+    }
+
     render() {
       const { messages } = this.state;
       console.log({messages})
       return (
         <div data-tid="container">
           <ChatRoom messages={messages} />
+          <Button variant="contained" onClick={this.sendMessage}>
+            Send Message
+          </Button>
         </div>
       );
   }

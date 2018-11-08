@@ -1,13 +1,18 @@
 // @flow
 import React, { Fragment } from 'react';
 import List from '@material-ui/core/List';
-import ChatBox from './ChatBox.js';
 import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import ChatBox from './ChatBox.js';
 
-const listStyle = { overflow: 'scroll', height: '90%' };
-const ChatRoom = ({ messages }) => (
+
+const messageSend = (send, value) => {
+  send(value);
+  value = "";
+};
+const listStyle = { overflow: 'scroll', height: '85%' };
+const ChatRoom = ({ messages, sendMessage }) => (
   <div style={{ height: '100vh' }}>
     <Grid
       container
@@ -27,9 +32,15 @@ const ChatRoom = ({ messages }) => (
         ))}
       </List>
       <Divider />
-      <Button variant="contained" >
-        Send Message
-      </Button>
+        <TextField
+          id="outlined-search"
+          label="Type a message..."
+          type="text"
+          margin="normal"
+          variant="outlined"
+          fullWidth
+          onBlur={(e) => { messageSend(sendMessage, e.target.value) }}
+        />
     </Grid>
   </div>
 );

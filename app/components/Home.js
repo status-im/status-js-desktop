@@ -37,8 +37,8 @@ status.connect("ws://localhost:8546");
       });
     }
 
-    sendMessage() {
-      status.sendMessage(DEFAULT_CHANNEL, "action triggered")
+    sendMessage(message) {
+      status.sendMessage(DEFAULT_CHANNEL, message)
     }
 
     render() {
@@ -46,7 +46,7 @@ status.connect("ws://localhost:8546");
       console.log({messages})
       return (
         <div data-tid="container">
-          <ChatRoom messages={messages} />
+          <ChatRoom messages={messages} sendMessage={this.sendMessage}/>
         </div>
       );
   }

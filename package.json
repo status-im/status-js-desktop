@@ -272,7 +272,7 @@
     "redux": "^4.0.0",
     "redux-thunk": "^2.3.0",
     "source-map-support": "^0.5.6",
-    "status-js-api": "^1.0.4"
+    "status-js-api": "^1.0.5"
   },
   "engines": {
     "node": ">=10.x <11",

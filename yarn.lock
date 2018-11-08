@@ -10974,9 +10974,9 @@ static-extend@^0.1.1:
     define-property "^0.2.5"
     object-copy "^0.1.0"
 
-status-js-api@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/status-js-api/-/status-js-api-1.0.3.tgz#b7d3ab3d0f72249706803de5b5ae8a2f5e35ffad"
+status-js-api@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/status-js-api/-/status-js-api-1.0.4.tgz#670d94a64a48be85f436e067e95ab8012767a2aa"
   dependencies:
     chance "^1.0.16"
     web3 "^1.0.0-beta.36"

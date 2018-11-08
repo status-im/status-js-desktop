@@ -47,9 +47,6 @@ status.connect("ws://localhost:8546");
       return (
         <div data-tid="container">
           <ChatRoom messages={messages} />
-          <Button variant="contained" onClick={this.sendMessage}>
-            Send Message
-          </Button>
         </div>
       );
   }

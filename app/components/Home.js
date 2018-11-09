@@ -19,7 +19,7 @@ status.connect("ws://localhost:8546");
     props: Props;
 
     state = {
-      messages: [],
+      messages: { [DEFAULT_CHANNEL]: [] },
       users: {},
       channels: {
         [DEFAULT_CHANNEL]: { users: {} }
@@ -51,7 +51,13 @@ status.connect("ws://localhost:8546");
           }
           const message = { username: data.username, message: msg, data };
           this.setState((prevState) => {
-            return { messages: [ ...prevState.messages, message ] }
+            const existing = prevState.messages[channelName];
+            return {
+              messages: {
+                ...prevState.messages,
+                [channelName]: existing ? [ ...existing, message ] : [ message ]
+              }
+            }
           })
         });
       });
@@ -107,14 +113,19 @@ status.connect("ws://localhost:8546");
     }
 
     render() {
-      const { messages, channels } = this.state;
+      const { messages, channels, currentChannel } = this.state;
+      console.log('state', this.state)
       return (
         <Grid container spacing={0}>
           <Grid item xs={3}>
             {!isNil(channels) && <ContextPanel channels={channels} joinChannel={this.joinChannel}/>}
           </Grid>
           <Grid item xs={9}>
-            <ChatRoom messages={messages} sendMessage={this.sendMessage}/>
+            <ChatRoom
+              messages={messages}
+              sendMessage={this.sendMessage}
+              currentChannel={currentChannel}
+            />
           </Grid>
         </Grid>
       );

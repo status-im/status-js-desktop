@@ -1,9 +1,11 @@
 // @flow
 import React, { Component } from 'react';
 import StatusJS from 'status-js-api';
+import { isNil } from 'lodash';
 import Grid from '@material-ui/core/Grid';
 import routes from '../constants/routes';
 import ChatRoom from './ChatRoom';
+import ContextPanel from './ContextPanel';
 import { User } from '../utils/actors';
 
 
@@ -95,11 +97,11 @@ status.connect("ws://localhost:8546");
     }
 
     render() {
-      const { messages } = this.state;
+      const { messages, channels } = this.state;
       return (
         <Grid container spacing={0}>
           <Grid item xs={3}>
-            <div>test</div>
+            {!isNil(channels) && <ContextPanel channels={channels} />}
           </Grid>
           <Grid item xs={9}>
             <ChatRoom messages={messages} sendMessage={this.sendMessage}/>

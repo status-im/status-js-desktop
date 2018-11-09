@@ -3,15 +3,14 @@ import React from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
-import ChatBubbleOutline from '@material-ui/icons/ChatBubbleSharp';
 
-const ChatBox = ({ username, message }) => (
+const ChannelBox = ({ channelName, message }) => (
   <ListItem>
     <Avatar>
-      <ChatBubbleOutline />
+      {channelName}
     </Avatar>
-    <ListItemText primary={`${username}`} secondary={message} />
+    <ListItemText primary={channelName} secondary={message} />
   </ListItem>
 );
 
-export default ChatBox;
+export default ChannelBox;

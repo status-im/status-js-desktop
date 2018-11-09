@@ -30,13 +30,17 @@ status.connect("ws://localhost:8546");
 
     componentDidMount() {
       const { currentChannel } = this.state;
-      status.joinChat(currentChannel, () => {
-        console.log(`joined channel ${currentChannel}`);
-        status.onMessage(currentChannel, (err, data) => {
+      this.joinChannel(currentChannel);
+    }
+
+    joinChannel = channelName => {
+      status.joinChat(channelName, () => {
+        console.log(`joined channel ${channelName}`);
+        status.onMessage(channelName, (err, data) => {
           const msg = JSON.parse(data.payload)[1][0];
 
           if (JSON.parse(data.payload)[1][1] === 'content/json') {
-            this.handleProtocolMessages(currentChannel, data);
+            this.handleProtocolMessages(channelName, data);
           } else {
             //channels.addMessage(DEFAULT_CHANNEL, msg, data.data.sig, data.username)
           }
@@ -49,7 +53,8 @@ status.connect("ws://localhost:8546");
     }
 
     sendMessage = message => {
-      status.sendMessage(DEFAULT_CHANNEL, message)
+      const { currentChannel } = this.state;
+      status.sendMessage(currentChannel, message);
     }
 
     addUserToChannel = (channelName, user) => {
@@ -101,7 +106,7 @@ status.connect("ws://localhost:8546");
       return (
         <Grid container spacing={0}>
           <Grid item xs={3}>
-            {!isNil(channels) && <ContextPanel channels={channels} />}
+            {!isNil(channels) && <ContextPanel channels={channels} joinChannel={this.joinChannel}/>}
           </Grid>
           <Grid item xs={9}>
             <ChatRoom messages={messages} sendMessage={this.sendMessage}/>

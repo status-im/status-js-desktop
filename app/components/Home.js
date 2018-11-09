@@ -34,7 +34,12 @@ status.connect("ws://localhost:8546");
     }
 
     joinChannel = channelName => {
+      const { channels } = this.state;
       status.joinChat(channelName, () => {
+        this.setState({
+          currentChannel: channelName,
+          channels: { ...channels, [channelName]: { users: {} } }
+        })
         console.log(`joined channel ${channelName}`);
         status.onMessage(channelName, (err, data) => {
           const msg = JSON.parse(data.payload)[1][0];

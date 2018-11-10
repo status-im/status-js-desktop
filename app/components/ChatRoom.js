@@ -9,7 +9,7 @@ import ChatBox from './ChatBox';
 
 
 const listStyle = { overflow: 'scroll', height: '85%' };
-const ChatRoom = ({ messages, sendMessage }) => (
+const ChatRoom = ({ messages, sendMessage, currentChannel }) => (
   <div style={{ height: '100vh' }}>
     <Grid
       container
@@ -19,7 +19,7 @@ const ChatRoom = ({ messages, sendMessage }) => (
       style={{ height: '100%' }}
     >
       <List style={listStyle}>
-        {messages.map((message, idx) => (
+        {messages[currentChannel] && messages[currentChannel].map((message, idx) => (
           <Fragment key={idx + message.message}>
             <ChatBox {...message} />
             <li>

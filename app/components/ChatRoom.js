@@ -8,7 +8,7 @@ import TextField from '@material-ui/core/TextField';
 import ChatBox from './ChatBox';
 
 
-const listStyle = { overflow: 'scroll', height: '85%' };
+const listStyle = { overflow: 'scroll', height: '87%' };
 const ChatRoom = ({ messages, sendMessage, currentChannel }) => (
   <div style={{ height: '100vh' }}>
     <Grid
@@ -48,6 +48,7 @@ const ChatRoom = ({ messages, sendMessage, currentChannel }) => (
         }) => (
           <form onSubmit={handleSubmit}>
             <TextField
+              style={{"height": "35px", "padding-top": "10px", "padding-left": "5px", "padding-right": "5px"}}
               id="chatInput"
               label="Type a message..."
               type="text"

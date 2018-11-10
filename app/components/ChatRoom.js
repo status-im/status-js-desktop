@@ -8,7 +8,8 @@ import TextField from '@material-ui/core/TextField';
 import ChatBox from './ChatBox';
 
 
-const listStyle = { overflow: 'scroll', height: '85%' };
+const formStyle = { display: 'flex', justifyContent: 'center', alignItems: 'center' };
+const listStyle = { overflow: 'scroll', height: '88%' };
 const ChatRoom = ({ messages, sendMessage, currentChannel }) => (
   <div style={{ height: '100vh' }}>
     <Grid
@@ -23,12 +24,11 @@ const ChatRoom = ({ messages, sendMessage, currentChannel }) => (
           <Fragment key={idx + message.message}>
             <ChatBox {...message} />
             <li>
-              <Divider inset />
+              <Divider />
             </li>
           </Fragment>
         ))}
       </List>
-      <Divider />
       <Formik
         initialValues={{ chatInput: '' }}
         onSubmit={(values, { setSubmitting, resetForm }) => {
@@ -46,9 +46,10 @@ const ChatRoom = ({ messages, sendMessage, currentChannel }) => (
            handleBlur,
            handleSubmit
         }) => (
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} style={formStyle} >
             <TextField
               id="chatInput"
+              style={{ width: 'auto', flexGrow: '0.95', margin: '2px 0 0 0' }}
               label="Type a message..."
               type="text"
               name="chatInput"

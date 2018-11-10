@@ -31,21 +31,21 @@ class ChatHeader extends PureComponent {
     const { displayChannelStats } = this.state;
     return (
       <ChatContext.Consumer>
-        {({ users }) =>
+        {({ channels }) =>
           <div>
-            {users && <Dialog onClose={this.handleClose} aria-labelledby="simple-dialog-title" open={displayChannelStats}>
+            {channels[currentChannel].users && <Dialog onClose={this.handleClose} aria-labelledby="simple-dialog-title" open={displayChannelStats}>
               <DialogTitle>{`Users Online in #${currentChannel}`}</DialogTitle>
               <div>
                 <List>
-                  {Object.keys(users).map(user => (
-                     <ListItem button key={users[user].pubkey}>
-                       <ListItemAvatar>
-                         <Avatar>
-                           <PersonIcon />
-                         </Avatar>
-                       </ListItemAvatar>
-                       <ListItemText primary={users[user].username} secondary={`Last seen on ${new Date(users[user].lastSeen)}`}/>
-                     </ListItem>
+                  {Object.keys(channels[currentChannel].users).map(user => (
+                    <ListItem button key={channels[currentChannel].users[user].pubkey}>
+                      <ListItemAvatar>
+                        <Avatar>
+                          <PersonIcon />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText primary={channels[currentChannel].users[user].username} secondary={`Last seen on ${new Date(channels[currentChannel].users[user].lastSeen)}`}/>
+                    </ListItem>
                   ))}
                 </List>
               </div>
@@ -54,7 +54,9 @@ class ChatHeader extends PureComponent {
               <Typography variant="h5" component="h2">
                 {`#${currentChannel}`}
               </Typography>
-              <PersonIcon style={{ color: grey[500] }} onClick={this.handleOpen} />
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <PersonIcon style={{ color: grey[500] }} onClick={this.handleOpen}/><div style={{ color: grey[500] }}>{Object.keys(channels[currentChannel].users).length}</div>
+              </div>
             </CardContent>
           </div>
         }

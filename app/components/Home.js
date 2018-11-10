@@ -38,7 +38,7 @@ export default class Home extends Component<Props> {
   }
 
   setActiveChannel = channelName => {
-    this.setState({ currentChannel: channelName });
+    this.setState({ currentChannel: channelName,  });
   }
 
   joinChannel = channelName => {
@@ -157,7 +157,7 @@ export default class Home extends Component<Props> {
   render() {
     const { messages, channels, currentChannel, users } = this.state;
     const { setActiveChannel } = this;
-    const chatContext = { setActiveChannel, currentChannel, users };
+    const chatContext = { setActiveChannel, currentChannel, users, channels };
     return (
       <ChatContext.Provider value={chatContext}>
         <Grid container spacing={0}>

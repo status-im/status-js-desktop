@@ -14,7 +14,7 @@ import ChatBox from './ChatBox';
 
 const formStyle = { display: 'flex', justifyContent: 'center', alignItems: 'center', flexBasis: '10%' };
 const listStyle = { overflow: 'scroll', flexBasis: '76%' };
-const ChatRoom = ({ messages, sendMessage, currentChannel }) => (
+const ChatRoom = ({ messages, sendMessage, currentChannel, usersTyping }) => (
   <div style={{ height: '100vh' }}>
     <Grid
       container
@@ -59,22 +59,25 @@ const ChatRoom = ({ messages, sendMessage, currentChannel }) => (
            handleBlur,
            handleSubmit
         }) => (
-          <form onSubmit={handleSubmit} style={formStyle} >
-            <TextField
-              id="chatInput"
-              style={{ width: 'auto', flexGrow: '0.95', margin: '2px 0 0 0' }}
-              label="Type a message..."
-              type="text"
-              name="chatInput"
-              margin="normal"
-              variant="outlined"
-              fullWidth
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.chatInput || ''}
-            />
-            {errors.chatInput && touched.chatInput && errors.chatInput}
-          </form>
+          <div>
+            <form onSubmit={handleSubmit} style={formStyle} >
+              <TextField
+                id="chatInput"
+                style={{ width: 'auto', flexGrow: '0.95', margin: '2px 0 0 0' }}
+                label="Type a message..."
+                type="text"
+                name="chatInput"
+                margin="normal"
+                variant="outlined"
+                fullWidth
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.chatInput || ''}
+              />
+              {errors.chatInput && touched.chatInput && errors.chatInput}
+            </form>
+            <div>{usersTyping}</div>
+          </div>
         )}
       </Formik>
     </Grid>

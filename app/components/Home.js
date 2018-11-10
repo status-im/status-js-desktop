@@ -14,6 +14,8 @@ const DEFAULT_CHANNEL = "mytest";
 const status = new StatusJS();
 status.connect("ws://localhost:8546");
 
+// let userPubKey = await status.getPublicKey();
+
 type Props = {};
 
 export default class Home extends Component<Props> {
@@ -26,7 +28,7 @@ export default class Home extends Component<Props> {
       [DEFAULT_CHANNEL]: { users: {} }
     },
     currentChannel: DEFAULT_CHANNEL,
-    usersTyping: {}
+    usersTyping: { [DEFAULT_CHANNEL]: [] }
   };
 
   componentDidMount() {
@@ -50,7 +52,7 @@ export default class Home extends Component<Props> {
         const msg = JSON.parse(data.payload)[1][0];
 
         if (JSON.parse(data.payload)[1][1] === 'content/json') {
-          this.handleProtocolMessages(channelName, data);
+          return this.handleProtocolMessages(channelName, data);
         } else {
           //channels.addMessage(DEFAULT_CHANNEL, msg, data.data.sig, data.username)
         }
@@ -98,7 +100,9 @@ export default class Home extends Component<Props> {
       this.setState(prevState => ({
         usersTyping: {
           ...prevState.usersTyping,
-          [fromUser]: (new Date().getTime())
+          [channelName]: {
+            [fromUser]: (new Date().getTime())
+          }
         }
       }))
     }
@@ -117,8 +121,27 @@ export default class Home extends Component<Props> {
     return user;
   }
 
+  whoIsTyping() {
+    const { users, usersTyping, currentChannel } = this.state;
+    let currentTime = (new Date().getTime());
+
+    let userList = [], typingInChannel = usersTyping[currentChannel];
+    for (let pubkey in typingInChannel) {
+      let lastTyped = typingInChannel[pubkey];
+
+      if (!users[pubkey]) continue;
+      if (currentTime - lastTyped > 3*1000 || currentTime < lastTyped) continue;
+      //if (pubkey === userPubKey) continue; // ignore self
+      userList.push(users[pubkey].username)
+    }
+
+    if (userList.length === 0) return "";
+
+    return userList.join(', ') + " is typing";
+  }
+
   render() {
-    const { messages, channels, currentChannel } = this.state;
+    const { messages, channels, currentChannel} = this.state;
     const { setActiveChannel } = this;
     const chatContext = { setActiveChannel, currentChannel };
     return (
@@ -134,6 +157,7 @@ export default class Home extends Component<Props> {
               messages={messages}
               sendMessage={this.sendMessage}
               currentChannel={currentChannel}
+              usersTyping={this.whoIsTyping()}
             />
           </Grid>
         </Grid>

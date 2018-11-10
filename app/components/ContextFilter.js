@@ -24,12 +24,13 @@ class ContextFilter extends React.Component {
 
   render() {
     const { open } = this.state;
-    const { joinChannel } = this.props;
+    const { joinChannel, name } = this.props;
     return (
       <Fragment>
-        <Button variant="fab" mini color="primary" aria-label="Add" onClick={this.handleClickOpen} style={{ marginBottom: '10px' }}>
-          <AddIcon />
-        </Button>
+        <span onClick={this.handleClickOpen} style={{"color": "#CAC4C9", "cursor": "pointer"}}>
+          <span style={{"width": "90%", "display": "inline-block", "vertical-align": "top"}}>{name}</span>
+          <span className="material-icons MuiIcon-root-4 Icons-icon-2" style={{"display": "inline-block", "position": "relative", "width": "21px"}} aria-hidden="true">add_circle2</span>
+        </span>
         <Formik
           initialValues={{ channel: '' }}
           onSubmit={(values, { setSubmitting, resetForm }) => {

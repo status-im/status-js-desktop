@@ -1,18 +1,19 @@
 // @flow
 import React, { Fragment } from 'react';
 import { Formik } from 'formik';
-import Card from '@material-ui/core/Card';
+import PersonIcon from '@material-ui/icons/PersonOutline';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
+import grey from '@material-ui/core/colors/grey';
 import ChatBox from './ChatBox';
 
 
-const formStyle = { display: 'flex', justifyContent: 'center', alignItems: 'center' };
-const listStyle = { overflow: 'scroll', height: '78%' };
+const formStyle = { display: 'flex', justifyContent: 'center', alignItems: 'center', flexBasis: '10%' };
+const listStyle = { overflow: 'scroll', flexBasis: '76%' };
 const ChatRoom = ({ messages, sendMessage, currentChannel }) => (
   <div style={{ height: '100vh' }}>
     <Grid
@@ -23,10 +24,11 @@ const ChatRoom = ({ messages, sendMessage, currentChannel }) => (
       style={{ height: '100%' }}
     >
       <div>
-        <CardContent>
+        <CardContent style={{ flexBasis: '10%', paddingBottom: '0px' }}>
           <Typography variant="h5" component="h2">
             {`#${currentChannel}`}
           </Typography>
+          <PersonIcon style={{ color: grey[500] }} />
         </CardContent>
       </div>
       <Divider />

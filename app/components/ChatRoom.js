@@ -10,6 +10,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import grey from '@material-ui/core/colors/grey';
 import ChatBox from './ChatBox';
+import ChatHeader from './ChatHeader';
 
 
 const formStyle = { display: 'flex', justifyContent: 'center', alignItems: 'center', flexBasis: '10%' };
@@ -23,14 +24,7 @@ const ChatRoom = ({ messages, sendMessage, currentChannel, usersTyping, typingEv
       alignItems="stretch"
       style={{ height: '100%' }}
     >
-      <div>
-        <CardContent style={{ flexBasis: '10%', paddingBottom: '0px' }}>
-          <Typography variant="h5" component="h2">
-            {`#${currentChannel}`}
-          </Typography>
-          <PersonIcon style={{ color: grey[500] }} />
-        </CardContent>
-      </div>
+      <ChatHeader currentChannel={currentChannel}/>
       <Divider />
       <List style={listStyle}>
         {messages[currentChannel] && messages[currentChannel].map((message, idx) => (

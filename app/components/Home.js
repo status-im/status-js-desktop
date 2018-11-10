@@ -155,9 +155,9 @@ export default class Home extends Component<Props> {
   }
 
   render() {
-    const { messages, channels, currentChannel} = this.state;
+    const { messages, channels, currentChannel, users } = this.state;
     const { setActiveChannel } = this;
-    const chatContext = { setActiveChannel, currentChannel };
+    const chatContext = { setActiveChannel, currentChannel, users };
     return (
       <ChatContext.Provider value={chatContext}>
         <Grid container spacing={0}>

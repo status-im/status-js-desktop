@@ -14,7 +14,7 @@ import ChatBox from './ChatBox';
 
 const formStyle = { display: 'flex', justifyContent: 'center', alignItems: 'center', flexBasis: '10%' };
 const listStyle = { overflow: 'scroll', flexBasis: '76%' };
-const ChatRoom = ({ messages, sendMessage, currentChannel, usersTyping }) => (
+const ChatRoom = ({ messages, sendMessage, currentChannel, usersTyping, typingEvent }) => (
   <div style={{ height: '100vh' }}>
     <Grid
       container
@@ -71,6 +71,7 @@ const ChatRoom = ({ messages, sendMessage, currentChannel, usersTyping }) => (
                 variant="outlined"
                 fullWidth
                 onChange={handleChange}
+                onKeyDown={typingEvent}
                 onBlur={handleBlur}
                 value={values.chatInput || ''}
               />

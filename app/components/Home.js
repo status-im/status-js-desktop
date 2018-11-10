@@ -9,6 +9,7 @@ import ContextPanel from './ContextPanel';
 import { User } from '../utils/actors';
 import { ChatContext } from '../context';
 
+let typingNotificationsTimestamp = {};
 
 const DEFAULT_CHANNEL = "mytest";
 const status = new StatusJS();
@@ -140,6 +141,19 @@ export default class Home extends Component<Props> {
     return userList.join(', ') + " is typing";
   }
 
+  typingEvent() {
+    const { currentChannel } = this.state;
+    let now = (new Date().getTime());
+
+    if (!typingNotificationsTimestamp[currentChannel]) {
+      typingNotificationsTimestamp[currentChannel] = { lastEvent: 0 }
+    }
+    if (typingNotificationsTimestamp[currentChannel].lastEvent === 0 || now - typingNotificationsTimestamp[currentChannel].lastEvent > 3*1000) {;
+      typingNotificationsTimestamp[currentChannel].lastEvent = now;
+      status.sendJsonMessage(currentChannel, {type: "typing"});
+    }
+  }
+
   render() {
     const { messages, channels, currentChannel} = this.state;
     const { setActiveChannel } = this;
@@ -158,6 +172,7 @@ export default class Home extends Component<Props> {
               sendMessage={this.sendMessage}
               currentChannel={currentChannel}
               usersTyping={this.whoIsTyping()}
+              typingEvent={this.typingEvent.bind(this)}
             />
           </Grid>
         </Grid>

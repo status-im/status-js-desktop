@@ -10,6 +10,7 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Avatar from '@material-ui/core/Avatar';
+import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { ChatContext } from '../context';
 
 class ChatHeader extends PureComponent {
@@ -41,7 +42,7 @@ class ChatHeader extends PureComponent {
                     <ListItem button key={channels[currentChannel].users[user].pubkey}>
                       <ListItemAvatar>
                         <Avatar>
-                          <PersonIcon />
+                          <Jazzicon diameter={40} seed={jsNumberForAddress(channels[currentChannel].users[user].pubkey)} />
                         </Avatar>
                       </ListItemAvatar>
                       <ListItemText primary={channels[currentChannel].users[user].username} secondary={`Last seen on ${new Date(channels[currentChannel].users[user].lastSeen)}`}/>

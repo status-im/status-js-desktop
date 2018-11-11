@@ -5,6 +5,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import ChatBubbleOutline from '@material-ui/icons/ChatBubbleSharp';
 import YouTube from 'react-youtube';
+import Linkify from 'react-linkify';
 
 // TODO: not exactly bulletproof right now, needs proper regex
 function hasYoutubeLink(text) {
@@ -31,7 +32,7 @@ const ChatBox = ({ username, message }) => (
       <Avatar>
         <ChatBubbleOutline />
       </Avatar>
-      <ListItemText primary={`${username}`} secondary={message} />
+      <ListItemText primary={`${username}`} secondary={<Linkify>{message}</Linkify>} />
     </ListItem>
     {hasYoutubeLink(message) &&
       <ListItem>

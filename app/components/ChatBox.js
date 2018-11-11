@@ -7,9 +7,16 @@ import ChatBubbleOutline from '@material-ui/icons/ChatBubbleSharp';
 import YouTube from 'react-youtube';
 import Linkify from 'react-linkify';
 
+import SpotifyPlayer from 'react-spotify-player';
+
 // TODO: not exactly bulletproof right now, needs proper regex
 function hasYoutubeLink(text) {
   return text.indexOf('http://www.youtube.com') >= 0 || text.indexOf('https://www.youtube.com') >= 0;
+}
+
+// TODO: not exactly bulletproof right now, needs proper regex
+function isSpotifyLink(text) {
+  return text.indexOf('spotify:') >= 0 ;
 }
 
 // https://gist.github.com/takien/4077195#
@@ -40,6 +47,16 @@ const ChatBox = ({ username, message }) => (
            videoId={getYoutubeId(message)}
            opts={{height: '390', width: '640', playerVars: { autoplay: 0 }}}
           />
+      </ListItem>
+    }
+    {isSpotifyLink(message) &&
+      <ListItem>
+        <SpotifyPlayer
+          uri={message}
+          size={{'width': 300, 'height': 300}}
+          view='list'
+          theme='black'
+        />
       </ListItem>
     }
   </Fragment>

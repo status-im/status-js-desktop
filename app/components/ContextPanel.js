@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import ChannelList from './ChannelList';
 import ContextFilter from './ContextFilter';
 import styles from './ContextPanel.css';

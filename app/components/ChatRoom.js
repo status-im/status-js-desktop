@@ -2,6 +2,7 @@
 import React, { Fragment } from 'react';
 import { Formik } from 'formik';
 import autoscroll from 'autoscroll-react';
+import Linkify from 'react-linkify';
 import PersonIcon from '@material-ui/icons/PersonOutline';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';

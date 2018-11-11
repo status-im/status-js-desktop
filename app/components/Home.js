@@ -8,8 +8,9 @@ import ChatRoom from './ChatRoom';
 import ContextPanel from './ContextPanel';
 import { User } from '../utils/actors';
 import { ChatContext } from '../context';
+import { isContactCode } from '../utils/parsers';
 
-let typingNotificationsTimestamp = {};
+const typingNotificationsTimestamp = {};
 
 const DEFAULT_CHANNEL = "mytest";
 const status = new StatusJS();
@@ -41,21 +42,42 @@ export default class Home extends Component<Props> {
     this.setState({ currentChannel: channelName,  });
   }
 
-  joinChannel = channelName => {
+  joinConversation = contact => {
+    const { joinChannel, addDirectMessage } = this;
+    if (isContactCode(contact)) {
+      addDirectMessage(contact)
+    } else {
+      joinChannel(contact)
+    }
+  }
+
+  addDirectMessage = contactCode => {
+    status.addContact(contactCode, () => {
+      this.addConversationEntry(contactCode);
+      this.createOnUserMessageHandler(contactCode);
+    })
+  }
+
+  addConversationEntry = code => {
     const { channels } = this.state;
+    this.setState({
+      currentChannel: code,
+      channels: {
+        ...channels,
+        [code]: { users: {} }
+      }
+    })
+  }
+
+  joinChannel = channelName => {
     status.joinChat(channelName, () => {
-      this.setState({
-        currentChannel: channelName,
-        channels: { ...channels, [channelName]: { users: {} } }
-      })
+      this.addConversationEntry(channelName);
       console.log(`joined channel ${channelName}`);
       status.onMessage(channelName, (err, data) => {
         const msg = JSON.parse(data.payload)[1][0];
 
         if (JSON.parse(data.payload)[1][1] === 'content/json') {
           return this.handleProtocolMessages(channelName, data);
-        } else {
-          //channels.addMessage(DEFAULT_CHANNEL, msg, data.data.sig, data.username)
         }
         const message = { username: data.username, message: msg, data };
         this.setState((prevState) => {
@@ -68,6 +90,25 @@ export default class Home extends Component<Props> {
           }
         })
       });
+    });
+  }
+
+  createOnUserMessageHandler = contactCode => {
+    status.onUserMessage((err, data) => {
+      const payload = JSON.parse(data.payload);
+      const msg = payload[1][0];
+      //const sender = data.sig;
+
+      const message = { username: data.username, message: msg, data };
+      this.setState((prevState) => {
+        const existing = prevState.messages[contactCode];
+        return {
+          messages: {
+            ...prevState.messages,
+            [contactCode]: existing ? [ ...existing, message ] : [ message ]
+          }
+        }
+      })
     });
   }
 
@@ -164,7 +205,7 @@ export default class Home extends Component<Props> {
           <Grid item xs={3}>
             {!isNil(channels) && <ContextPanel
                                    channels={channels}
-                                   joinChannel={this.joinChannel} />}
+                                   joinConversation={this.joinConversation} />}
           </Grid>
           <Grid item xs={9}>
             <ChatRoom

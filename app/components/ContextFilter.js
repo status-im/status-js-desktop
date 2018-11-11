@@ -24,7 +24,7 @@ class ContextFilter extends React.Component {
 
   render() {
     const { open } = this.state;
-    const { joinChannel, name } = this.props;
+    const { joinConversation, name } = this.props;
     return (
       <Fragment>
         <span onClick={this.handleClickOpen} style={{"color": "#CAC4C9", "cursor": "pointer"}}>
@@ -35,7 +35,7 @@ class ContextFilter extends React.Component {
           initialValues={{ channel: '' }}
           onSubmit={(values, { setSubmitting, resetForm }) => {
               const { channel } = values;
-              joinChannel(channel);
+              joinConversation(channel);
               resetForm();
               setSubmitting(false);
               this.handleClose();

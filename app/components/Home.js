@@ -36,11 +36,10 @@ export default class Home extends Component<Props> {
   componentDidMount() {
     const { currentChannel } = this.state;
     this.joinChannel(currentChannel);
+    setTimeout(() => { this.createOnUserMessageHandler(); }, 2000);
 
     setInterval(() => {
-      console.dir("setInterval!");
       const { currentChannel, users } = this.state;
-      console.dir("channel: " + currentChannel);
       status.sendJsonMessage(currentChannel, {type: "ping"});
 
       let currentTime = (new Date().getTime());
@@ -75,14 +74,13 @@ export default class Home extends Component<Props> {
   addDirectMessage = contactCode => {
     status.addContact(contactCode, () => {
       this.addConversationEntry(contactCode);
-      this.createOnUserMessageHandler(contactCode);
     })
   }
 
-  addConversationEntry = code => {
-    const { channels } = this.state;
+  addConversationEntry = (code, changeChannel = true) => {
+    const { channels, currentChannel } = this.state;
     this.setState({
-      currentChannel: code,
+      currentChannel: changeChannel ? code : currentChannel,
       channels: {
         ...channels,
         [code]: { users: {} }
@@ -114,22 +112,27 @@ export default class Home extends Component<Props> {
     });
   }
 
-  createOnUserMessageHandler = contactCode => {
-    status.onUserMessage((err, data) => {
-      const payload = JSON.parse(data.payload);
-      const msg = payload[1][0];
-      //const sender = data.sig;
-
-      const message = { username: data.username, message: msg, data };
-      this.setState((prevState) => {
-        const existing = prevState.messages[contactCode];
-        return {
-          messages: {
-            ...prevState.messages,
-            [contactCode]: existing ? [ ...existing, message ] : [ message ]
+  createOnUserMessageHandler = () => {
+    status.onUserMessage((err, res) => {
+      if (res) {
+        const payload = JSON.parse(res.payload);
+        const msg = payload[1][0];
+        const sender = res.data.sig;
+        const message = { username: res.username, message: msg, data: res };
+        this.setState((prevState) => {
+          const existing = prevState.messages[sender];
+          return {
+            messages: {
+              ...prevState.messages,
+              [sender]: existing ? [ ...existing, message ] : [ message ]
+            },
+            channels: {
+              ...prevState.channels,
+              [sender]: { users: {} }
+            }
           }
-        }
-      })
+        })
+      }
     });
   }
 
@@ -238,7 +241,7 @@ export default class Home extends Component<Props> {
               usersTyping={this.whoIsTyping()}
               typingEvent={this.typingEvent.bind(this)}
               channelUsers={channelUsers}
-              allUsers={this.state.users}
+              allUsers={users}
             />
           </Grid>
         </Grid>

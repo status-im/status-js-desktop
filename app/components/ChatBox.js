@@ -40,7 +40,7 @@ const ChatBox = ({ username, message, pubkey }) => (
       <Avatar>
         <ListItemAvatar>
           <Avatar>
-            <Jazzicon diameter={40} seed={jsNumberForAddress(pubkey)} />
+            {pubkey && <Jazzicon diameter={40} seed={jsNumberForAddress(pubkey)} />}
           </Avatar>
         </ListItemAvatar>
       </Avatar>

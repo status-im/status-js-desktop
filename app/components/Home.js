@@ -4,7 +4,6 @@ import StatusJS from 'status-js-api';
 import IPFS from 'ipfs';
 import { isNil } from 'lodash';
 import Grid from '@material-ui/core/Grid';
-import routes from '../constants/routes';
 import ChatRoom from './ChatRoom';
 import ContextPanel from './ContextPanel';
 import Login from './Login';
@@ -40,6 +39,24 @@ export default class Home extends PureComponent<Props> {
 
   componentDidMount() {
     this.ipfs = new IPFS();
+
+    setInterval(() => {
+      const { currentChannel, users } = this.state;
+      status.sendJsonMessage(currentChannel, {type: "ping"});
+      const currentTime = (new Date().getTime());
+      for (let pubkey in users) {
+        const user = users[pubkey];
+        if (currentTime - user.lastSeen > 10*1000) {
+          user.online = false;
+          this.setState(prevState => ({
+            users: {
+              ...prevState.users,
+              [pubkey]: user
+            }
+          }))
+        }
+      }
+    }, 5 * 1000);
   }
 
   componentWillUnmount() {
@@ -57,7 +74,7 @@ export default class Home extends PureComponent<Props> {
     this.keyringController.exportAccount(account)
         .then(key => { status.connect(URL, `0x${key}`) })
         .then(() => { this.onConnect() })
-  }
+  };
 
   onConnect = () => {
     const { currentChannel } = this.state;

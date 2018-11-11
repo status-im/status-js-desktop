@@ -32,7 +32,7 @@ class WhoIsTyping extends PureComponent {
     const userList = this.whoIsTyping();
     return (
       <div>
-        {!userList.length ? "" : userList.join(',' ) + " is typing"}
+        {!userList.length ? "" : `${userList.join(',')} is typing`}
       </div>
     )
   }
@@ -56,11 +56,11 @@ const keyDownHandler = (e, typingEvent, setValue, value) => {
     form.dispatchEvent(new Event("submit"));
   }
   typingEvent(e)
-}
+};
 
 const AutoScrollList = autoscroll(List);
 const formStyle = { display: 'flex', justifyContent: 'center', alignItems: 'center', flexBasis: '10%' };
-const listStyle = { overflow: 'scroll', flexBasis: '76%' };
+const listStyle = { overflowY: 'scroll', flexBasis: '76%', position: 'absolute', top: '72px', left: 0, right: 0, bottom: '56px' };
 const ChatRoomForm = createRef();
 const ChatRoom = ({ messages, sendMessage, currentChannel, usersTyping, typingEvent, channelUsers, allUsers, ipfs }) => (
   <div style={{ height: '100vh' }}>
@@ -106,7 +106,7 @@ const ChatRoom = ({ messages, sendMessage, currentChannel, usersTyping, typingEv
              handleSubmit,
              setFieldValue
           }) => (
-            <div>
+            <div className="chat-input" style={{position: 'absolute', bottom: 0, left: 0, right: 0}}>
               <form onSubmit={handleSubmit} style={formStyle} ref={ChatRoomForm}>
                 <TextField
                   id="chatInput"

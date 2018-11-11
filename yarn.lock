@@ -9890,6 +9890,10 @@ react-router@^4.3.1:
     prop-types "^15.6.1"
     warning "^4.0.1"
 
+react-spotify-player@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/react-spotify-player/-/react-spotify-player-1.0.4.tgz#b840821223b959795f51cbe65759d0966ee326a7"
+
 react-test-renderer@^16.0.0-0, react-test-renderer@^16.4.1:
   version "16.6.0"
   resolved "https://registry.npmjs.org/react-test-renderer/-/react-test-renderer-16.6.0.tgz#fe490096bed55c3f4e92c023da3b89f9d03fceb3"

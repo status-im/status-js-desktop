@@ -36,6 +36,27 @@ export default class Home extends Component<Props> {
   componentDidMount() {
     const { currentChannel } = this.state;
     this.joinChannel(currentChannel);
+
+    setInterval(() => {
+      console.dir("setInterval!");
+      const { currentChannel, users } = this.state;
+      console.dir("channel: " + currentChannel);
+      status.sendJsonMessage(currentChannel, {type: "ping"});
+
+      let currentTime = (new Date().getTime());
+      for (let pubkey in users) {
+        let user = users[pubkey];
+        if (currentTime - user.lastSeen > 10*1000) {
+          user.online = false;
+          this.setState(prevState => ({
+            users: {
+               ...prevState.users,
+               [pubkey]: user
+            }
+          }))
+        }
+      }
+    }, 5 * 1000);
   }
 
   setActiveChannel = channelName => {
@@ -79,7 +100,7 @@ export default class Home extends Component<Props> {
         if (JSON.parse(data.payload)[1][1] === 'content/json') {
           return this.handleProtocolMessages(channelName, data);
         }
-        const message = { username: data.username, message: msg, data };
+        const message = { username: data.username, message: msg, pubkey: data.data.sig, data };
         this.setState((prevState) => {
           const existing = prevState.messages[channelName];
           return {
@@ -197,8 +218,10 @@ export default class Home extends Component<Props> {
 
   render() {
     const { messages, channels, currentChannel, users } = this.state;
+    const channelUsers = channels[currentChannel].users;
     const { setActiveChannel } = this;
     const chatContext = { setActiveChannel, currentChannel, users, channels };
+
     return (
       <ChatContext.Provider value={chatContext}>
         <Grid container spacing={0}>
@@ -214,6 +237,8 @@ export default class Home extends Component<Props> {
               currentChannel={currentChannel}
               usersTyping={this.whoIsTyping()}
               typingEvent={this.typingEvent.bind(this)}
+              channelUsers={channelUsers}
+              allUsers={this.state.users}
             />
           </Grid>
         </Grid>

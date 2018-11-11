@@ -274,6 +274,7 @@
     "react-redux": "^5.0.7",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
+    "react-spotify-player": "^1.0.4",
     "react-youtube": "^7.8.0",
     "redux": "^4.0.0",
     "redux-thunk": "^2.3.0",

@@ -1,6 +1,7 @@
 // @flow
 import React, { Fragment } from 'react';
 import { Formik } from 'formik';
+import autoscroll from 'autoscroll-react';
 import PersonIcon from '@material-ui/icons/PersonOutline';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
@@ -12,6 +13,7 @@ import grey from '@material-ui/core/colors/grey';
 import ChatBox from './ChatBox';
 import ChatHeader from './ChatHeader';
 
+let AutoScrollList = autoscroll(List);
 
 const formStyle = { display: 'flex', justifyContent: 'center', alignItems: 'center', flexBasis: '10%' };
 const listStyle = { overflow: 'scroll', flexBasis: '76%' };
@@ -26,7 +28,7 @@ const ChatRoom = ({ messages, sendMessage, currentChannel, usersTyping, typingEv
     >
       <ChatHeader currentChannel={currentChannel}/>
       <Divider />
-      <List style={listStyle}>
+      <AutoScrollList style={listStyle}>
         {messages[currentChannel] && messages[currentChannel].map((message, idx) => (
           <Fragment key={idx + message.message}>
             <ChatBox {...message} />
@@ -35,7 +37,7 @@ const ChatRoom = ({ messages, sendMessage, currentChannel, usersTyping, typingEv
             </li>
           </Fragment>
         ))}
-      </List>
+      </AutoScrollList>
       <Formik
         initialValues={{ chatInput: '' }}
         onSubmit={(values, { setSubmitting, resetForm }) => {

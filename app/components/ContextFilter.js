@@ -28,7 +28,7 @@ class ContextFilter extends React.Component {
     return (
       <Fragment>
         <span onClick={this.handleClickOpen} style={{"color": "#CAC4C9", "cursor": "pointer"}}>
-          <span style={{"width": "90%", "display": "inline-block", "vertical-align": "top"}}>{name}</span>
+          <span style={{"width": "90%", "display": "inline-block", "verticalAlign": "top"}}>{name}</span>
           <span className="material-icons MuiIcon-root-4 Icons-icon-2" style={{"display": "inline-block", "position": "relative", "width": "21px"}} aria-hidden="true">add_circle2</span>
         </span>
         <Formik

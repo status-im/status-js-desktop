@@ -1,13 +1,14 @@
 // @flow
 import React, { Fragment } from 'react';
 import ListItem from '@material-ui/core/ListItem';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import ChatBubbleOutline from '@material-ui/icons/ChatBubbleSharp';
 import YouTube from 'react-youtube';
 import Linkify from 'react-linkify';
-
 import SpotifyPlayer from 'react-spotify-player';
+import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 
 // TODO: not exactly bulletproof right now, needs proper regex
 function hasYoutubeLink(text) {
@@ -33,11 +34,15 @@ function getYoutubeId(url) {
   return ID;
 }
 
-const ChatBox = ({ username, message }) => (
+const ChatBox = ({ username, message, pubkey }) => (
   <Fragment>
     <ListItem>
       <Avatar>
-        <ChatBubbleOutline />
+        <ListItemAvatar>
+          <Avatar>
+            <Jazzicon diameter={40} seed={jsNumberForAddress(pubkey)} />
+          </Avatar>
+        </ListItemAvatar>
       </Avatar>
       <ListItemText primary={`${username}`} secondary={<Linkify>{message}</Linkify>} />
     </ListItem>

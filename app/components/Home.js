@@ -128,7 +128,7 @@ export default class Home extends Component<Props> {
             },
             channels: {
               ...prevState.channels,
-              [sender]: { users: {} }
+              [sender]: { username: res.username, users: {} }
             }
           }
         })

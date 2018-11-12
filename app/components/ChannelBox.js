@@ -2,15 +2,18 @@
 import React from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import Avatar from '@material-ui/core/Avatar';
 import { ChatContext } from '../context';
 
 const ChannelBox = ({ channelName, message }) => (
   <ChatContext.Consumer>
-    {({ setActiveChannel, currentChannel }) =>
-    <ListItem onClick={() => setActiveChannel(channelName)} selected={currentChannel == channelName} style={{"cursor": "pointer", "padding": "0px 2px"}}>
-      <ListItemText primary={<span style={{"color": "white"}}><span style={{"paddingRight": "5px", "color": "grey"}}>#</span>{channelName}</span>} secondary={message}  />
-    </ListItem>
+    {({ setActiveChannel, currentChannel, channels }) =>
+      <ListItem onClick={() => setActiveChannel(channelName)} selected={currentChannel == channelName} style={{"cursor": "pointer", "padding": "0px 2px"}}>
+        <ListItemText primary={
+          <span style={{"color": "white"}}>
+            {channels[channelName].username ? `${channels[channelName].username}` : `#${channelName}`}
+          </span>
+        } secondary={message}  />
+      </ListItem>
     }
   </ChatContext.Consumer>
 );

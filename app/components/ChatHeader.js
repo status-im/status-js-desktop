@@ -53,7 +53,7 @@ class ChatHeader extends PureComponent {
             </Dialog>}
             <CardContent style={{ flexBasis: '10%', paddingBottom: '0px' }}>
               <Typography variant="h5" component="h2">
-                {`#${currentChannel}`}
+                {channels[currentChannel].username ? `${channels[currentChannel].username}` : `#${currentChannel}`}
               </Typography>
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <PersonIcon style={{ color: grey[500] }} onClick={this.handleOpen}/><div style={{ color: grey[500] }}>{Object.keys(channels[currentChannel].users).length}</div>

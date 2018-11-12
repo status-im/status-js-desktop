@@ -176,28 +176,9 @@ export default class Home extends Component<Props> {
     return user;
   }
 
-  whoIsTyping() {
-    const { users, usersTyping, currentChannel } = this.state;
-    let currentTime = (new Date().getTime());
-
-    let userList = [], typingInChannel = usersTyping[currentChannel];
-    for (let pubkey in typingInChannel) {
-      let lastTyped = typingInChannel[pubkey];
-
-      if (!users[pubkey]) continue;
-      if (currentTime - lastTyped > 3*1000 || currentTime < lastTyped) continue;
-      //if (pubkey === userPubKey) continue; // ignore self
-      userList.push(users[pubkey].username)
-    }
-
-    if (userList.length === 0) return "";
-
-    return userList.join(', ') + " is typing";
-  }
-
-  typingEvent() {
+  typingEvent = () => {
     const { currentChannel } = this.state;
-    let now = (new Date().getTime());
+    const now = (new Date().getTime());
 
     if (!typingNotificationsTimestamp[currentChannel]) {
       typingNotificationsTimestamp[currentChannel] = { lastEvent: 0 }
@@ -209,7 +190,7 @@ export default class Home extends Component<Props> {
   }
 
   render() {
-    const { messages, channels, currentChannel, users } = this.state;
+    const { messages, channels, currentChannel, users, usersTyping } = this.state;
     const channelUsers = channels[currentChannel].users;
     const { setActiveChannel } = this;
     const chatContext = { setActiveChannel, currentChannel, users, channels };
@@ -227,8 +208,8 @@ export default class Home extends Component<Props> {
               messages={messages}
               sendMessage={this.sendMessage}
               currentChannel={currentChannel}
-              usersTyping={this.whoIsTyping()}
-              typingEvent={this.typingEvent.bind(this)}
+              usersTyping={usersTyping}
+              typingEvent={this.typingEvent}
               channelUsers={channelUsers}
               allUsers={users}
             />

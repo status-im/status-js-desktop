@@ -36,26 +36,15 @@ export default class Home extends Component<Props> {
   componentDidMount() {
     const { currentChannel } = this.state;
     this.joinChannel(currentChannel);
+    this.pingChannel();
     setTimeout(() => { this.createOnUserMessageHandler(); }, 2000);
+  }
 
+  pingChannel = () => {
+    const { currentChannel } = this.state;
     setInterval(() => {
-      const { currentChannel, users } = this.state;
       status.sendJsonMessage(currentChannel, {type: "ping"});
-
-      let currentTime = (new Date().getTime());
-      for (let pubkey in users) {
-        let user = users[pubkey];
-        if (currentTime - user.lastSeen > 10*1000) {
-          user.online = false;
-          this.setState(prevState => ({
-            users: {
-               ...prevState.users,
-               [pubkey]: user
-            }
-          }))
-        }
-      }
-    }, 5 * 1000);
+    }, 5 * 1000)
   }
 
   setActiveChannel = channelName => {

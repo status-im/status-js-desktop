@@ -9,12 +9,15 @@ import ContextPanel from './ContextPanel';
 import { User } from '../utils/actors';
 import { ChatContext } from '../context';
 import { isContactCode } from '../utils/parsers';
+import { getKeyData, createVault, restoreVault } from '../utils/keyManagement';
+
+const mnemonic = "example exile argue silk regular smile grass bomb merge arm assist farm";
 
 const typingNotificationsTimestamp = {};
 
 const DEFAULT_CHANNEL = "mytest";
+const URL = "ws://localhost:8546";
 const status = new StatusJS();
-status.connect("ws://localhost:8546");
 
 // let userPubKey = await status.getPublicKey();
 
@@ -34,10 +37,20 @@ export default class Home extends Component<Props> {
   };
 
   componentDidMount() {
+    this.setupKeyringController();
+  }
+
+  connect = async (account) => {
+    this.keyringController.exportAccount(account)
+        .then(key => { status.connect(URL, `0x${key}`) })
+        .then(() => { this.onConnect() })
+  }
+
+  onConnect = () => {
     const { currentChannel } = this.state;
     this.joinChannel(currentChannel);
     this.pingChannel();
-    setTimeout(() => { this.createOnUserMessageHandler(); }, 2000);
+    this.createOnUserMessageHandler();
   }
 
   pingChannel = () => {
@@ -45,6 +58,17 @@ export default class Home extends Component<Props> {
     setInterval(() => {
       status.sendJsonMessage(currentChannel, {type: "ping"});
     }, 5 * 1000)
+  }
+
+  setupKeyringController = async () => {
+    const keyStore = getKeyData();
+    if (!keyStore) {
+      this.keyringController = await createVault('test', mnemonic);
+    } else {
+      this.keyringController = await restoreVault('test');
+    }
+    const accounts = await this.keyringController.getAccounts();
+    this.connect(accounts[0]);
   }
 
   setActiveChannel = channelName => {

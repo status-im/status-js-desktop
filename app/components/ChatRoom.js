@@ -1,5 +1,5 @@
 // @flow
-import React, { Fragment, PureComponent } from 'react';
+import React, { Fragment, PureComponent, createRef } from 'react';
 import { Formik } from 'formik';
 import autoscroll from 'autoscroll-react';
 import List from '@material-ui/core/List';
@@ -36,10 +36,25 @@ class WhoIsTyping extends PureComponent {
   }
 }
 
+const keyDownHandler = (e, typingEvent, setValue, value) => {
+  if(e.shiftKey && e.keyCode === 13) {
+	  e.preventDefault()
+    const cursor = e.target.selectionStart
+    const newValue = `${value.slice(0, cursor)}\n${value.slice(cursor)}`;
+    setValue('chatInput', newValue);
+  }
+  else if (e.keyCode === 13) {
+    e.preventDefault();
+    const form = ChatRoomForm.current;
+    form.dispatchEvent(new Event("submit"));
+  }
+  typingEvent(e)
+}
 
 const AutoScrollList = autoscroll(List);
 const formStyle = { display: 'flex', justifyContent: 'center', alignItems: 'center', flexBasis: '10%' };
 const listStyle = { overflow: 'scroll', flexBasis: '76%' };
+const ChatRoomForm = createRef();
 const ChatRoom = ({ messages, sendMessage, currentChannel, usersTyping, typingEvent, channelUsers, allUsers }) => (
   <div style={{ height: '100vh' }}>
     <Grid
@@ -76,12 +91,14 @@ const ChatRoom = ({ messages, sendMessage, currentChannel, usersTyping, typingEv
            touched,
            handleChange,
            handleBlur,
-           handleSubmit
+           handleSubmit,
+           setFieldValue
         }) => (
           <div>
-            <form onSubmit={handleSubmit} style={formStyle} >
+            <form onSubmit={handleSubmit} style={formStyle} ref={ChatRoomForm}>
               <TextField
                 id="chatInput"
+                multiline
                 style={{ width: 'auto', flexGrow: '0.95', margin: '2px 0 0 0' }}
                 label="Type a message..."
                 type="text"
@@ -90,7 +107,7 @@ const ChatRoom = ({ messages, sendMessage, currentChannel, usersTyping, typingEv
                 variant="outlined"
                 fullWidth
                 onChange={handleChange}
-                onKeyDown={typingEvent}
+                onKeyDown={(e) => keyDownHandler(e, typingEvent, setFieldValue, values.chatInput)}
                 onBlur={handleBlur}
                 value={values.chatInput || ''}
               />

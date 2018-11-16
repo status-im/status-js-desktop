@@ -4,11 +4,12 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
-import ChatBubbleOutline from '@material-ui/icons/ChatBubbleSharp';
 import YouTube from 'react-youtube';
 import Linkify from 'react-linkify';
 import SpotifyPlayer from 'react-spotify-player';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { atomDark } from 'react-syntax-highlighter/dist/styles/prism';
 
 // TODO: not exactly bulletproof right now, needs proper regex
 function hasYoutubeLink(text) {
@@ -34,6 +35,10 @@ function getYoutubeId(url) {
   return ID;
 }
 
+//TODO use regex for code parsing / detection. Add new line detection for shift+enter
+const MessageRender = ({ message }) => (
+  message[0] === "`" ? <SyntaxHighlighter language='javascript' style={atomDark}>{message.slice(1)}</SyntaxHighlighter> : <Linkify>{message}</Linkify>
+)
 const ChatBox = ({ username, message, pubkey }) => (
   <Fragment>
     <ListItem>
@@ -44,25 +49,25 @@ const ChatBox = ({ username, message, pubkey }) => (
           </Avatar>
         </ListItemAvatar>
       </Avatar>
-      <ListItemText primary={`${username}`} secondary={<Linkify>{message}</Linkify>} />
+      <ListItemText primary={`${username}`} secondary={<MessageRender message={message} />} />
     </ListItem>
     {hasYoutubeLink(message) &&
-      <ListItem>
-          <YouTube
-           videoId={getYoutubeId(message)}
-           opts={{height: '390', width: '640', playerVars: { autoplay: 0 }}}
-          />
-      </ListItem>
+     <ListItem>
+       <YouTube
+         videoId={getYoutubeId(message)}
+         opts={{height: '390', width: '640', playerVars: { autoplay: 0 }}}
+       />
+     </ListItem>
     }
     {isSpotifyLink(message) &&
-      <ListItem>
-        <SpotifyPlayer
-          uri={message}
-          size={{'width': 300, 'height': 300}}
-          view='list'
-          theme='black'
-        />
-      </ListItem>
+     <ListItem>
+       <SpotifyPlayer
+         uri={message}
+         size={{'width': 300, 'height': 300}}
+         view='list'
+         theme='black'
+       />
+     </ListItem>
     }
   </Fragment>
 );

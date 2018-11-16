@@ -37,7 +37,9 @@ function getYoutubeId(url) {
 
 //TODO use regex for code parsing / detection. Add new line detection for shift+enter
 const MessageRender = ({ message }) => (
-  message[0] === "`" ? <SyntaxHighlighter language='javascript' style={atomDark}>{message.slice(1)}</SyntaxHighlighter> : <Linkify>{message}</Linkify>
+  message[0] === "`"
+  ? <SyntaxHighlighter language='javascript' style={atomDark}>{message.slice(1)}</SyntaxHighlighter>
+  : <Linkify><span style={{ wordWrap: 'break-word' }}>{message}</span></Linkify>
 )
 const ChatBox = ({ username, message, pubkey }) => (
   <Fragment>

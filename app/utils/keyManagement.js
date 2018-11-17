@@ -23,3 +23,4 @@ export const getKeyData = () => store.get('vault');
 export const storeKeyData = vault => {
   store.set('vault', vault);
 }
+export const wipeVault = () => { store.set('vault', null); }

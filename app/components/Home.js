@@ -10,18 +10,14 @@ import Login from './Login';
 import { User } from '../utils/actors';
 import { ChatContext } from '../context';
 import { isContactCode } from '../utils/parsers';
-import { getKeyData, createVault, restoreVault } from '../utils/keyManagement';
+import { getKeyData, createVault, restoreVault, wipeVault } from '../utils/keyManagement';
 import { FullScreenLoader } from './Loaders';
-
-const mnemonic = "example exile argue silk regular smile grass bomb merge arm assist farm";
 
 const typingNotificationsTimestamp = {};
 
 const DEFAULT_CHANNEL = "mytest";
 const URL = "ws://localhost:8546";
 const status = new StatusJS();
-
-// let userPubKey = await status.getPublicKey();
 
 type Props = {};
 
@@ -37,12 +33,11 @@ export default class Home extends Component<Props> {
     currentChannel: DEFAULT_CHANNEL,
     usersTyping: { [DEFAULT_CHANNEL]: [] },
     identity: {},
-    loading: false
+    loading: false,
+    keyStore: getKeyData()
   };
 
-  componentDidMount() {
-    //this.setupKeyringController();
-  }
+  componentDidMount() {}
 
   componentWillUnmount() {
     clearInterval(this.pingInterval);
@@ -71,9 +66,9 @@ export default class Home extends Component<Props> {
     }, 5 * 1000)
   }
 
-  setupKeyringController = async (password) => {
+  setupKeyringController = async (password, mnemonic) => {
     this.setState({ loading: true });
-    const keyStore = getKeyData();
+    const { keyStore } = this.state;
     if (!keyStore) {
       this.keyringController = await createVault(password, mnemonic);
     } else {
@@ -81,6 +76,11 @@ export default class Home extends Component<Props> {
     }
     const accounts = await this.keyringController.getAccounts();
     this.connect(accounts[0]);
+  }
+
+  wipeKeyStore = () => {
+    wipeVault();
+    this.setState({ keyStore: null });
   }
 
   setActiveChannel = channelName => {
@@ -237,9 +237,9 @@ export default class Home extends Component<Props> {
   }
 
   render() {
-    const { messages, channels, currentChannel, users, usersTyping, identity, loading } = this.state;
+    const { messages, channels, currentChannel, users, usersTyping, identity, loading, keyStore } = this.state;
     const channelUsers = channels[currentChannel].users;
-    const { setActiveChannel, setupKeyringController } = this;
+    const { setActiveChannel, setupKeyringController, wipeKeyStore } = this;
     const chatContext = { setActiveChannel, currentChannel, users, channels };
     console.log(identity)
 
@@ -249,7 +249,10 @@ export default class Home extends Component<Props> {
          ? <FullScreenLoader />
          : <Fragment>
            {!identity.publicKey
-            ? <Login setupKeyringController={setupKeyringController} />
+            ? <Login
+                setupKeyringController={setupKeyringController}
+                keyStore={keyStore}
+                wipeKeyStore={wipeKeyStore} />
             : <Grid container spacing={0}>
               <Grid item xs={3}>
                 {!isNil(channels) && <ContextPanel

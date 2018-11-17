@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import StatusJS from 'status-js-api';
 import { isNil } from 'lodash';
 import Grid from '@material-ui/core/Grid';
@@ -11,6 +11,7 @@ import { User } from '../utils/actors';
 import { ChatContext } from '../context';
 import { isContactCode } from '../utils/parsers';
 import { getKeyData, createVault, restoreVault } from '../utils/keyManagement';
+import { FullScreenLoader } from './Loaders';
 
 const mnemonic = "example exile argue silk regular smile grass bomb merge arm assist farm";
 
@@ -35,7 +36,8 @@ export default class Home extends Component<Props> {
     },
     currentChannel: DEFAULT_CHANNEL,
     usersTyping: { [DEFAULT_CHANNEL]: [] },
-    identity: {}
+    identity: {},
+    loading: false
   };
 
   componentDidMount() {
@@ -57,7 +59,9 @@ export default class Home extends Component<Props> {
     this.joinChannel(currentChannel);
     this.pingChannel();
     this.createOnUserMessageHandler();
-    setTimeout(() => { this.getMyIdentities(); }, 1500);
+    setTimeout(() => {
+      this.getMyIdentities();
+    }, 1500);
   }
 
   pingChannel = () => {
@@ -68,6 +72,7 @@ export default class Home extends Component<Props> {
   }
 
   setupKeyringController = async (password) => {
+    this.setState({ loading: true });
     const keyStore = getKeyData();
     if (!keyStore) {
       this.keyringController = await createVault(password, mnemonic);
@@ -176,7 +181,10 @@ export default class Home extends Component<Props> {
   getMyIdentities = async () => {
     const publicKey = await status.getPublicKey();
     const username = await status.getUserName(publicKey);
-    this.setState({ identity: { publicKey, username }})
+    this.setState({
+      identity: { publicKey, username },
+      loading: false
+    })
 
   }
 
@@ -229,7 +237,7 @@ export default class Home extends Component<Props> {
   }
 
   render() {
-    const { messages, channels, currentChannel, users, usersTyping, identity } = this.state;
+    const { messages, channels, currentChannel, users, usersTyping, identity, loading } = this.state;
     const channelUsers = channels[currentChannel].users;
     const { setActiveChannel, setupKeyringController } = this;
     const chatContext = { setActiveChannel, currentChannel, users, channels };
@@ -237,26 +245,30 @@ export default class Home extends Component<Props> {
 
     return (
       <ChatContext.Provider value={chatContext}>
-        {!identity.publicKey
-         ? <Login setupKeyringController={setupKeyringController} />
-         : <Grid container spacing={0}>
-           <Grid item xs={3}>
-             {!isNil(channels) && <ContextPanel
-                                    channels={channels}
-                                    joinConversation={this.joinConversation} />}
-           </Grid>
-           <Grid item xs={9}>
-             <ChatRoom
-               messages={messages}
-               sendMessage={this.sendMessage}
-               currentChannel={currentChannel}
-               usersTyping={usersTyping}
-               typingEvent={this.typingEvent}
-               channelUsers={channelUsers}
-               allUsers={users}
-             />
-           </Grid>
-         </Grid>}
+        {loading
+         ? <FullScreenLoader />
+         : <Fragment>
+           {!identity.publicKey
+            ? <Login setupKeyringController={setupKeyringController} />
+            : <Grid container spacing={0}>
+              <Grid item xs={3}>
+                {!isNil(channels) && <ContextPanel
+                                       channels={channels}
+                                       joinConversation={this.joinConversation} />}
+              </Grid>
+              <Grid item xs={9}>
+                <ChatRoom
+                  messages={messages}
+                  sendMessage={this.sendMessage}
+                  currentChannel={currentChannel}
+                  usersTyping={usersTyping}
+                  typingEvent={this.typingEvent}
+                  channelUsers={channelUsers}
+                  allUsers={users}
+                />
+              </Grid>
+            </Grid>}
+         </Fragment>}
       </ChatContext.Provider>
     );
   }

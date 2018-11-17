@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button';
 import { Formik } from 'formik';
 import { func } from 'prop-types';
 import { isNull } from 'lodash';
+import StatusJSLogo from '../images/statusjs-logo';
 
 const containerStyle = {
   display: 'flex',
@@ -38,6 +39,7 @@ const Login = ({ setupKeyringController, keyStore, wipeKeyStore }) => (
          handleSubmit
       }) => (
         <form onSubmit={handleSubmit} style={containerStyle}>
+          <StatusJSLogo />
           {isNull(keyStore) && <TextField
             id="seed"
             type="text"

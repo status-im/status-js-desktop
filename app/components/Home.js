@@ -6,6 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import routes from '../constants/routes';
 import ChatRoom from './ChatRoom';
 import ContextPanel from './ContextPanel';
+import Login from './Login';
 import { User } from '../utils/actors';
 import { ChatContext } from '../context';
 import { isContactCode } from '../utils/parsers';
@@ -33,11 +34,16 @@ export default class Home extends Component<Props> {
       [DEFAULT_CHANNEL]: { users: {} }
     },
     currentChannel: DEFAULT_CHANNEL,
-    usersTyping: { [DEFAULT_CHANNEL]: [] }
+    usersTyping: { [DEFAULT_CHANNEL]: [] },
+    identity: {}
   };
 
   componentDidMount() {
-    this.setupKeyringController();
+    //this.setupKeyringController();
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.pingInterval);
   }
 
   connect = async (account) => {
@@ -51,21 +57,22 @@ export default class Home extends Component<Props> {
     this.joinChannel(currentChannel);
     this.pingChannel();
     this.createOnUserMessageHandler();
+    setTimeout(() => { this.getMyIdentities(); }, 1500);
   }
 
   pingChannel = () => {
     const { currentChannel } = this.state;
-    setInterval(() => {
+    this.pingInterval = setInterval(() => {
       status.sendJsonMessage(currentChannel, {type: "ping"});
     }, 5 * 1000)
   }
 
-  setupKeyringController = async () => {
+  setupKeyringController = async (password) => {
     const keyStore = getKeyData();
     if (!keyStore) {
-      this.keyringController = await createVault('test', mnemonic);
+      this.keyringController = await createVault(password, mnemonic);
     } else {
-      this.keyringController = await restoreVault('test');
+      this.keyringController = await restoreVault(password);
     }
     const accounts = await this.keyringController.getAccounts();
     this.connect(accounts[0]);
@@ -166,16 +173,24 @@ export default class Home extends Component<Props> {
     return channels.find(c => c.name === channelName);
   }
 
+  getMyIdentities = async () => {
+    const publicKey = await status.getPublicKey();
+    const username = await status.getUserName(publicKey);
+    this.setState({ identity: { publicKey, username }})
+
+  }
+
   handleProtocolMessages = (channelName, data) => {
+    const { identity: { publicKey } } = this.state
     const msg = JSON.parse(JSON.parse(data.payload)[1][0]);
     const fromUser = data.data.sig;
 
-    if (msg.type === 'ping') {
+    if (msg.type === 'ping' && fromUser !== publicKey) {
       const user = this.addOrUpdateUserKey(fromUser, data.username);
       this.addUserToChannel(channelName, user);
     }
 
-    if (msg.type === 'typing') {
+    if (msg.type === 'typing' && fromUser !== publicKey) {
       this.setState(prevState => ({
         usersTyping: {
           ...prevState.usersTyping,
@@ -214,31 +229,34 @@ export default class Home extends Component<Props> {
   }
 
   render() {
-    const { messages, channels, currentChannel, users, usersTyping } = this.state;
+    const { messages, channels, currentChannel, users, usersTyping, identity } = this.state;
     const channelUsers = channels[currentChannel].users;
-    const { setActiveChannel } = this;
+    const { setActiveChannel, setupKeyringController } = this;
     const chatContext = { setActiveChannel, currentChannel, users, channels };
+    console.log(identity)
 
     return (
       <ChatContext.Provider value={chatContext}>
-        <Grid container spacing={0}>
-          <Grid item xs={3}>
-            {!isNil(channels) && <ContextPanel
-                                   channels={channels}
-                                   joinConversation={this.joinConversation} />}
-          </Grid>
-          <Grid item xs={9}>
-            <ChatRoom
-              messages={messages}
-              sendMessage={this.sendMessage}
-              currentChannel={currentChannel}
-              usersTyping={usersTyping}
-              typingEvent={this.typingEvent}
-              channelUsers={channelUsers}
-              allUsers={users}
-            />
-          </Grid>
-        </Grid>
+        {!identity.publicKey
+         ? <Login setupKeyringController={setupKeyringController} />
+         : <Grid container spacing={0}>
+           <Grid item xs={3}>
+             {!isNil(channels) && <ContextPanel
+                                    channels={channels}
+                                    joinConversation={this.joinConversation} />}
+           </Grid>
+           <Grid item xs={9}>
+             <ChatRoom
+               messages={messages}
+               sendMessage={this.sendMessage}
+               currentChannel={currentChannel}
+               usersTyping={usersTyping}
+               typingEvent={this.typingEvent}
+               channelUsers={channelUsers}
+               allUsers={users}
+             />
+           </Grid>
+         </Grid>}
       </ChatContext.Provider>
     );
   }

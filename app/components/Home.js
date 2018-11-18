@@ -45,6 +45,12 @@ export default class Home extends PureComponent<Props> {
   }
 
   connect = async (account) => {
+    if (!account) {
+      this.setState({ loading: true });
+      status.connect(URL);
+      return this.onConnect();
+    }
+
     this.keyringController.exportAccount(account)
         .then(key => { status.connect(URL, `0x${key}`) })
         .then(() => { this.onConnect() })
@@ -240,7 +246,7 @@ export default class Home extends PureComponent<Props> {
   render() {
     const { messages, channels, currentChannel, users, usersTyping, identity, loading, keyStore } = this.state;
     const channelUsers = channels[currentChannel].users;
-    const { setActiveChannel, setupKeyringController, wipeKeyStore } = this;
+    const { setActiveChannel, setupKeyringController, wipeKeyStore, connect } = this;
     const chatContext = { setActiveChannel, currentChannel, users, channels };
 
     return (
@@ -250,6 +256,7 @@ export default class Home extends PureComponent<Props> {
          : <Fragment>
            {!identity.publicKey
             ? <Login
+                connect={connect}
                 setupKeyringController={setupKeyringController}
                 keyStore={keyStore}
                 wipeKeyStore={wipeKeyStore} />

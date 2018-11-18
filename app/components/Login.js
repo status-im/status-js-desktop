@@ -14,7 +14,7 @@ const containerStyle = {
   height: '100vh',
   width: '50%'
 };
-const Login = ({ setupKeyringController, keyStore, wipeKeyStore }) => (
+const Login = ({ setupKeyringController, keyStore, wipeKeyStore, connect }) => (
   <Grid
     container
     justify="center"
@@ -41,17 +41,17 @@ const Login = ({ setupKeyringController, keyStore, wipeKeyStore }) => (
         <form onSubmit={handleSubmit} style={containerStyle}>
           <StatusJSLogo />
           {isNull(keyStore) && <TextField
-            id="seed"
-            type="text"
-            name="seed"
-            rows="4"
-            multiline
-            label="Enter your 12 word mnemonic"
-            variant="outlined"
-            fullWidth
-            value={values.seed}
-            onBlur={handleBlur}
-            onChange={handleChange}
+                                 id="seed"
+                                 type="text"
+                                 name="seed"
+                                 rows="4"
+                                 multiline
+                                 label="Enter your 12 word mnemonic"
+                                 variant="outlined"
+                                 fullWidth
+                                 value={values.seed}
+                                 onBlur={handleBlur}
+                                 onChange={handleChange}
           />}
           <TextField
             id="password"
@@ -65,6 +65,9 @@ const Login = ({ setupKeyringController, keyStore, wipeKeyStore }) => (
             onChange={handleChange}
           />
           {errors.password && touched.password && errors.password}
+          <Button size="large" variant="outlined" color="primary" onClick={() => connect()}>
+            USE A ONE TIME RANDOM ACCOUNT
+          </Button>
           {!isNull(keyStore) && <Button size="large" variant="outlined" color="secondary" onClick={wipeKeyStore}>
             RESET ACCOUNT
           </Button>}
@@ -76,7 +79,8 @@ const Login = ({ setupKeyringController, keyStore, wipeKeyStore }) => (
 
 Login.propTypes = {
   setupKeyringController: func.isRequired,
-  wipeKeyStore: func.isRequired
+  wipeKeyStore: func.isRequired,
+  connect: func.isRequired
 };
 
 export default Login;

@@ -1,17 +1,18 @@
 // @flow
-import React, { Component, Fragment } from 'react';
+import React, { PureComponent, Fragment, lazy, Suspense } from 'react';
 import StatusJS from 'status-js-api';
 import { isNil } from 'lodash';
 import Grid from '@material-ui/core/Grid';
 import routes from '../constants/routes';
-import ChatRoom from './ChatRoom';
 import ContextPanel from './ContextPanel';
 import Login from './Login';
 import { User } from '../utils/actors';
 import { ChatContext } from '../context';
 import { isContactCode } from '../utils/parsers';
 import { getKeyData, createVault, restoreVault, wipeVault } from '../utils/keyManagement';
-import { FullScreenLoader } from './Loaders';
+import { FullScreenLoader, FullScreenGridLoader } from './Loaders';
+
+const ChatRoom = lazy(() => import('./ChatRoom'));
 
 const typingNotificationsTimestamp = {};
 
@@ -21,7 +22,7 @@ const status = new StatusJS();
 
 type Props = {};
 
-export default class Home extends Component<Props> {
+export default class Home extends PureComponent<Props> {
   props: Props;
 
   state = {
@@ -37,7 +38,8 @@ export default class Home extends Component<Props> {
     keyStore: getKeyData()
   };
 
-  componentDidMount() {}
+  componentDidMount() {
+  }
 
   componentWillUnmount() {
     clearInterval(this.pingInterval);
@@ -241,7 +243,6 @@ export default class Home extends Component<Props> {
     const channelUsers = channels[currentChannel].users;
     const { setActiveChannel, setupKeyringController, wipeKeyStore } = this;
     const chatContext = { setActiveChannel, currentChannel, users, channels };
-    console.log(identity)
 
     return (
       <ChatContext.Provider value={chatContext}>
@@ -255,20 +256,23 @@ export default class Home extends Component<Props> {
                 wipeKeyStore={wipeKeyStore} />
             : <Grid container spacing={0}>
               <Grid item xs={3}>
-                {!isNil(channels) && <ContextPanel
-                                       channels={channels}
-                                       joinConversation={this.joinConversation} />}
+                {!isNil(channels) &&
+                  <ContextPanel
+                    channels={channels}
+                    joinConversation={this.joinConversation} />}
               </Grid>
               <Grid item xs={9}>
-                <ChatRoom
-                  messages={messages}
-                  sendMessage={this.sendMessage}
-                  currentChannel={currentChannel}
-                  usersTyping={usersTyping}
-                  typingEvent={this.typingEvent}
-                  channelUsers={channelUsers}
-                  allUsers={users}
-                />
+                <Suspense fallback={<FullScreenGridLoader />}>
+                  <ChatRoom
+                    messages={messages}
+                    sendMessage={this.sendMessage}
+                    currentChannel={currentChannel}
+                    usersTyping={usersTyping}
+                    typingEvent={this.typingEvent}
+                    channelUsers={channelUsers}
+                    allUsers={users}
+                  />
+                </Suspense>
               </Grid>
             </Grid>}
          </Fragment>}

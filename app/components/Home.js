@@ -1,18 +1,17 @@
 // @flow
-import React, { PureComponent, Fragment, lazy, Suspense } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import StatusJS from 'status-js-api';
 import { isNil } from 'lodash';
 import Grid from '@material-ui/core/Grid';
 import routes from '../constants/routes';
+import ChatRoom from './ChatRoom';
 import ContextPanel from './ContextPanel';
 import Login from './Login';
 import { User } from '../utils/actors';
 import { ChatContext } from '../context';
 import { isContactCode } from '../utils/parsers';
 import { getKeyData, createVault, restoreVault, wipeVault } from '../utils/keyManagement';
-import { FullScreenLoader, FullScreenGridLoader } from './Loaders';
-
-const ChatRoom = lazy(() => import('./ChatRoom'));
+import { FullScreenLoader } from './Loaders';
 
 const typingNotificationsTimestamp = {};
 
@@ -262,7 +261,6 @@ export default class Home extends PureComponent<Props> {
                     joinConversation={this.joinConversation} />}
               </Grid>
               <Grid item xs={9}>
-                <Suspense fallback={<FullScreenGridLoader />}>
                   <ChatRoom
                     messages={messages}
                     sendMessage={this.sendMessage}
@@ -272,7 +270,6 @@ export default class Home extends PureComponent<Props> {
                     channelUsers={channelUsers}
                     allUsers={users}
                   />
-                </Suspense>
               </Grid>
             </Grid>}
          </Fragment>}

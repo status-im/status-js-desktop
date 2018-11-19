@@ -24,16 +24,18 @@ const Login = ({ setupKeyringController, keyStore, wipeKeyStore, connect }) => (
   >
     <Formik
       initialValues={{ password: '', seed: '' }}
-      onSubmit={(values, { resetForm }) => {
-        const { password, seed } = values;
-        setupKeyringController(password, seed);
+  onSubmit={(values, { resetForm, setFieldError }) => {
+    const { password, seed } = values;
+        setupKeyringController(password, seed)
+          .catch(err => {
+            setFieldError("password", err.message)
+          });
         resetForm();
       }}
     >
       {({
          values,
          errors,
-         touched,
          handleChange,
          handleBlur,
          handleSubmit
@@ -60,11 +62,12 @@ const Login = ({ setupKeyringController, keyStore, wipeKeyStore, connect }) => (
             label={isNull(keyStore) ? "Set your password" : "Enter your password to login"}
             variant="outlined"
             fullWidth
+            error={errors.password}
+            helperText={errors.password}
             value={values.password}
             onBlur={handleBlur}
             onChange={handleChange}
           />
-          {errors.password && touched.password && errors.password}
           <Button size="large" variant="outlined" color="primary" onClick={() => connect()}>
             USE A ONE TIME RANDOM ACCOUNT
           </Button>

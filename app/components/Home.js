@@ -74,13 +74,17 @@ export default class Home extends PureComponent<Props> {
   }
 
   setupKeyringController = async (password, mnemonic) => {
-    this.setState({ loading: true });
     const { keyStore } = this.state;
     if (!keyStore) {
       this.keyringController = await createVault(password, mnemonic);
     } else {
-      this.keyringController = await restoreVault(password);
+      try {
+        this.keyringController = await restoreVault(password);
+      } catch(err) {
+        throw err;
+      }
     }
+    this.setState({ loading: true });
     const accounts = await this.keyringController.getAccounts();
     this.connect(accounts[0]);
   }

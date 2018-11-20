@@ -39,7 +39,7 @@ function getYoutubeId(url) {
 const MessageRender = ({ message }) => (
   message[0] === "`"
   ? <SyntaxHighlighter language='javascript' style={atomDark}>{message.slice(1)}</SyntaxHighlighter>
-  : <Linkify><span style={{ wordWrap: 'break-word' }}>{message}</span></Linkify>
+  : <Linkify><span style={{ wordWrap: 'break-word', whiteSpace: 'pre-line' }}>{message}</span></Linkify>
 )
 const ChatBox = ({ username, message, pubkey }) => (
   <Fragment>

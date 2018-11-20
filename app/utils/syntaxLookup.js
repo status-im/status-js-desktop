@@ -1,0 +1,25 @@
+// all options available here: https://github.com/conorhastings/react-syntax-highlighter/blob/master/AVAILABLE_LANGUAGES_PRISM.MD
+export default {
+  'bs': 'bash',
+  'bf': 'brainfuck',
+  'c': 'c',
+  'cp': 'cpp',
+  'cl': 'clojure',
+  'cs': 'css',
+  'dk': 'docker',
+  'ht': 'http',
+  'js': 'javascript',
+  'jn': 'json',
+  'jx': 'jsx',
+  'la': 'latex',
+  'ma': 'makefile',
+  'md': 'markdown',
+  'nm': 'nim',
+  'pb': 'protobuf',
+  'pu': 'puppet',
+  'py': 'python',
+  'sq': 'sql',
+  'ts': 'typescript',
+  'vi': 'vim',
+  'ym': 'yaml'
+}

@@ -10,6 +10,7 @@ import SpotifyPlayer from 'react-spotify-player';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/styles/prism';
+import SyntaxLookup from '../utils/syntaxLookup';
 
 // TODO: not exactly bulletproof right now, needs proper regex
 function hasYoutubeLink(text) {
@@ -35,10 +36,12 @@ function getYoutubeId(url) {
   return ID;
 }
 
+console.log(SyntaxLookup['js'])
+
 //TODO use regex for code parsing / detection. Add new line detection for shift+enter
 const MessageRender = ({ message }) => (
-  message[0] === "`"
-  ? <SyntaxHighlighter language='javascript' style={atomDark}>{message.slice(1)}</SyntaxHighlighter>
+  message[2] === "`" && SyntaxLookup[message.slice(0,2)]
+  ? <SyntaxHighlighter language={SyntaxLookup[message.slice(0,2)]} style={atomDark}>{message.slice(3)}</SyntaxHighlighter>
   : <Linkify><span style={{ wordWrap: 'break-word', whiteSpace: 'pre-line' }}>{message}</span></Linkify>
 )
 const ChatBox = ({ username, message, pubkey }) => (

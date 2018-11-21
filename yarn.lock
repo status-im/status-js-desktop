@@ -10,6 +10,10 @@
   version "0.0.6"
   resolved "https://registry.npmjs.org/7zip/-/7zip-0.0.6.tgz#9cafb171af82329490353b4816f03347aa150a30"
 
+"@areknawo/rex@^1.0.0-beta.4":
+  version "1.0.0-beta.4"
+  resolved "https://registry.yarnpkg.com/@areknawo/rex/-/rex-1.0.0-beta.4.tgz#8715e2e0de8517f6390586edac061d7b55e2fea9"
+
 "@babel/code-frame@7.0.0-beta.44":
   version "7.0.0-beta.44"
   resolved "http://registry.npmjs.org/@babel/code-frame/-/code-frame-7.0.0-beta.44.tgz#2a02643368de80916162be70865c97774f3adbd9"

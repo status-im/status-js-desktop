@@ -81,7 +81,7 @@ const ChatRoom = ({ messages, sendMessage, currentChannel, usersTyping, typingEv
         <AutoScrollList style={listStyle}>
           {messages[currentChannel] && messages[currentChannel].map((message) => (
             <Fragment key={message.data.payload}>
-              <ChatBox {...message} />
+              <ChatBox {...message} ipfs={ipfs} />
               <li>
                 <Divider />
               </li>

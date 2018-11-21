@@ -1,5 +1,5 @@
 // @flow
-import React, { Fragment } from 'react';
+import React, { Fragment, PureComponent } from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -10,7 +10,11 @@ import SpotifyPlayer from 'react-spotify-player';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/styles/prism';
+import { Matcher } from '@areknawo/rex'
 import SyntaxLookup from '../utils/syntaxLookup';
+import { getFile } from '../utils/ipfs';
+
+const ipfsMatcher = new Matcher().begin().find('/ipfs/');
 
 // TODO: not exactly bulletproof right now, needs proper regex
 function hasYoutubeLink(text) {
@@ -42,37 +46,65 @@ const MessageRender = ({ message }) => (
   ? <SyntaxHighlighter language={SyntaxLookup[message.slice(0,2)]} style={atomDark}>{message.slice(3)}</SyntaxHighlighter>
   : <Linkify><span style={{ wordWrap: 'break-word', whiteSpace: 'pre-line' }}>{message}</span></Linkify>
 )
-const ChatBox = ({ username, message, pubkey }) => (
-  <Fragment>
-    <ListItem>
-      <Avatar>
-        <ListItemAvatar>
+class ChatBox extends PureComponent {
+
+  state = {
+    imgUrl: null
+  }
+
+  componentDidMount() {
+    const { message } = this.props;
+    if (ipfsMatcher.test(message)) this.getImageFromIpfs();
+  }
+
+  getImageFromIpfs = async () => {
+    const { ipfs, message } = this.props;
+    const files = await getFile(ipfs, message);
+    const { content } = files[0];
+    const arrayBufferView = new Uint8Array(content);
+    const blob = new Blob([ arrayBufferView ], { type: "image/jpeg" });
+    const imgUrl = URL.createObjectURL(blob);
+    const image = `data:image/png;base64,${content.toString('base64')}`;
+    this.setState({ imgUrl });
+  }
+
+  render() {
+    const { username, message, pubkey } = this.props;
+    const { imgUrl } = this.state;
+    return (
+      <Fragment>
+        <ListItem>
           <Avatar>
-            {pubkey && <Jazzicon diameter={40} seed={jsNumberForAddress(pubkey)} />}
+            <ListItemAvatar>
+              <Avatar>
+                {pubkey && <Jazzicon diameter={40} seed={jsNumberForAddress(pubkey)} />}
+              </Avatar>
+            </ListItemAvatar>
           </Avatar>
-        </ListItemAvatar>
-      </Avatar>
-      <ListItemText primary={`${username}`} secondary={<MessageRender message={message} />} />
-    </ListItem>
-    {hasYoutubeLink(message) &&
-     <ListItem>
-       <YouTube
-         videoId={getYoutubeId(message)}
-         opts={{height: '390', width: '640', playerVars: { autoplay: 0 }}}
-       />
-     </ListItem>
-    }
-    {isSpotifyLink(message) &&
-     <ListItem>
-       <SpotifyPlayer
-         uri={message}
-         size={{'width': 300, 'height': 300}}
-         view='list'
-         theme='black'
-       />
-     </ListItem>
-    }
-  </Fragment>
-);
+          <ListItemText primary={`${username}`} secondary={<MessageRender message={message} />} />
+        </ListItem>
+        {hasYoutubeLink(message) &&
+         <ListItem>
+           <YouTube
+             videoId={getYoutubeId(message)}
+             opts={{height: '390', width: '640', playerVars: { autoplay: 0 }}}
+           />
+         </ListItem>
+        }
+        {isSpotifyLink(message) &&
+         <ListItem>
+           <SpotifyPlayer
+             uri={message}
+             size={{'width': 300, 'height': 300}}
+             view='list'
+             theme='black'
+           />
+         </ListItem>
+        }
+        {!!imgUrl && <img src={imgUrl} alt='ipfs-image' style={{ width: '100%' }}/>}
+      </Fragment>
+    )
+  };
+}
 
 export default ChatBox;

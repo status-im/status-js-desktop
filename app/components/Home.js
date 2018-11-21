@@ -1,6 +1,7 @@
 // @flow
 import React, { PureComponent, Fragment } from 'react';
 import StatusJS from 'status-js-api';
+import IPFS from 'ipfs';
 import { isNil } from 'lodash';
 import Grid from '@material-ui/core/Grid';
 import routes from '../constants/routes';
@@ -38,10 +39,12 @@ export default class Home extends PureComponent<Props> {
   };
 
   componentDidMount() {
+    this.ipfs = new IPFS();
   }
 
   componentWillUnmount() {
     clearInterval(this.pingInterval);
+    this.ipfs.shutdown();
   }
 
   connect = async (account) => {
@@ -250,7 +253,7 @@ export default class Home extends PureComponent<Props> {
   render() {
     const { messages, channels, currentChannel, users, usersTyping, identity, loading, keyStore } = this.state;
     const channelUsers = channels[currentChannel].users;
-    const { setActiveChannel, setupKeyringController, wipeKeyStore, connect } = this;
+    const { setActiveChannel, setupKeyringController, wipeKeyStore, connect, ipfs } = this;
     const chatContext = { setActiveChannel, currentChannel, users, channels };
 
     return (
@@ -280,6 +283,7 @@ export default class Home extends PureComponent<Props> {
                     typingEvent={this.typingEvent}
                     channelUsers={channelUsers}
                     allUsers={users}
+                    ipfs={ipfs}
                   />
               </Grid>
             </Grid>}

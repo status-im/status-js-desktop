@@ -9,6 +9,7 @@ import TextField from '@material-ui/core/TextField';
 import Dropzone from 'react-dropzone';
 import ChatBox from './ChatBox';
 import ChatHeader from './ChatHeader';
+import { uploadFileAndSend } from '../utils/ipfs';
 
 class WhoIsTyping extends PureComponent {
 
@@ -37,8 +38,9 @@ class WhoIsTyping extends PureComponent {
   }
 }
 
-function onDrop(acceptedFiles, rejectedFiles) {
-  console.log({acceptedFiles});
+function onDrop(acceptedFiles, rejectedFiles, ipfs, sendMessage) {
+  const file = acceptedFiles[0];
+  uploadFileAndSend(ipfs, file, sendMessage);
 }
 
 const keyDownHandler = (e, typingEvent, setValue, value) => {
@@ -60,10 +62,10 @@ const AutoScrollList = autoscroll(List);
 const formStyle = { display: 'flex', justifyContent: 'center', alignItems: 'center', flexBasis: '10%' };
 const listStyle = { overflow: 'scroll', flexBasis: '76%' };
 const ChatRoomForm = createRef();
-const ChatRoom = ({ messages, sendMessage, currentChannel, usersTyping, typingEvent, channelUsers, allUsers }) => (
+const ChatRoom = ({ messages, sendMessage, currentChannel, usersTyping, typingEvent, channelUsers, allUsers, ipfs }) => (
   <div style={{ height: '100vh' }}>
     <Dropzone
-      onDrop={onDrop}
+      onDrop={(a, r) => { onDrop(a,r,ipfs,sendMessage) } }
       disableClick
       style={{ position: 'relative', height: '100%' }}
       activeStyle={{ backgroundColor: 'grey', outline: '5px dashed lightgrey', alignSelf: 'center', outlineOffset: '-10px' }}>

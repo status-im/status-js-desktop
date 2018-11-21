@@ -36,8 +36,6 @@ function getYoutubeId(url) {
   return ID;
 }
 
-console.log(SyntaxLookup['js'])
-
 //TODO use regex for code parsing / detection. Add new line detection for shift+enter
 const MessageRender = ({ message }) => (
   message[2] === "`" && SyntaxLookup[message.slice(0,2)]

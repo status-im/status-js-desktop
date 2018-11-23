@@ -114,7 +114,7 @@ class ChatBox extends PureComponent {
           />
         </ListItem>
         }
-        {!!imgUrl && <img src={imgUrl} alt='ipfs' style={{ width: '100%' }}/>}
+        {!!imgUrl && <img src={imgUrl} alt='ipfs'/>}
       </Fragment>
     );
   };

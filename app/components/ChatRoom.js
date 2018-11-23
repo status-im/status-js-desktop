@@ -10,12 +10,22 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 import Dropzone from 'react-dropzone';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
 
 import ChatBox from './ChatBox';
 import ChatHeader from './ChatHeader';
 import { uploadFileAndSend } from '../utils/ipfs';
+
+import 'emoji-mart/css/emoji-mart.css';
+import { Picker } from 'emoji-mart';
+
+
+let addEmoji = function(emoji) {
+  console.dir('emoji selected');
+  console.dir(emoji);
+}
 
 class WhoIsTyping extends PureComponent {
 
@@ -130,6 +140,8 @@ const ChatRoom = ({ messages, sendMessage, currentChannel, usersTyping, typingEv
                     onBlur={handleBlur}
                     value={values.chatInput || ''}
                   />
+              <Picker onSelect={addEmoji} style={{ position: 'absolute', bottom: '80px', right: '20px' }} />
+              <Button>Smile</Button>
                   {errors.chatInput && touched.chatInput && errors.chatInput}
                 </form>
                 <WhoIsTyping

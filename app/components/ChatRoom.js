@@ -150,7 +150,7 @@ class ChatRoom extends Component {
                     setFieldValue
                   }) => (
                   <div className="chat-input"
-                       style={{ position: 'absolute', bottom: 0, left: 0, right: 0, paddingBottom: 10 }}>
+                       style={{ position: 'absolute', bottom: 0, left: 0, right: 0, paddingBottom: 10, 'background-color': 'white' }}>
                     <form onSubmit={handleSubmit} style={formStyle} ref={ChatRoomForm}>
                       <TextField
                         id="chatInput"

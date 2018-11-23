@@ -17,7 +17,6 @@ import ChatBox from './ChatBox';
 import ChatHeader from './ChatHeader';
 import { uploadFileAndSend } from '../utils/ipfs';
 
-
 class WhoIsTyping extends PureComponent {
 
   whoIsTyping() {

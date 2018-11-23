@@ -39,24 +39,6 @@ export default class Home extends PureComponent<Props> {
 
   componentDidMount() {
     this.ipfs = new IPFS();
-
-    setInterval(() => {
-      const { currentChannel, users } = this.state;
-      status.sendJsonMessage(currentChannel, {type: "ping"});
-      const currentTime = (new Date().getTime());
-      for (let pubkey in users) {
-        const user = users[pubkey];
-        if (currentTime - user.lastSeen > 10*1000) {
-          user.online = false;
-          this.setState(prevState => ({
-            users: {
-              ...prevState.users,
-              [pubkey]: user
-            }
-          }))
-        }
-      }
-    }, 5 * 1000);
   }
 
   componentWillUnmount() {

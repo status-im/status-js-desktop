@@ -28,7 +28,7 @@ function isSpotifyLink(text) {
 
 // https://gist.github.com/takien/4077195#
 function getYoutubeId(url) {
-  var ID = '';
+  let ID = '';
   url = url.replace(/(>|<)/gi,'').split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
   if(url[2] !== undefined) {
     ID = url[2].split(/[^0-9a-z_\-]/i);
@@ -45,12 +45,12 @@ const MessageRender = ({ message }) => (
   message[2] === "`" && SyntaxLookup[message.slice(0,2)]
   ? <SyntaxHighlighter language={SyntaxLookup[message.slice(0,2)]} style={atomDark}>{message.slice(3)}</SyntaxHighlighter>
   : <Linkify><span style={{ wordWrap: 'break-word', whiteSpace: 'pre-line' }}>{message}</span></Linkify>
-)
+);
 class ChatBox extends PureComponent {
 
   state = {
     imgUrl: null
-  }
+  };
 
   componentDidMount() {
     const { message } = this.props;
@@ -66,7 +66,7 @@ class ChatBox extends PureComponent {
     const imgUrl = URL.createObjectURL(blob);
     const image = `data:image/png;base64,${content.toString('base64')}`;
     this.setState({ imgUrl });
-  }
+  };
 
   render() {
     const { username, message, pubkey } = this.props;
@@ -101,7 +101,7 @@ class ChatBox extends PureComponent {
            />
          </ListItem>
         }
-        {!!imgUrl && <img src={imgUrl} alt='ipfs-image' style={{ width: '100%' }}/>}
+        {!!imgUrl && <img src={imgUrl} alt='ipfs' style={{ width: '100%' }}/>}
       </Fragment>
     )
   };

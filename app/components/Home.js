@@ -13,6 +13,9 @@ import { ChatContext } from '../context';
 import { isContactCode } from '../utils/parsers';
 import { getKeyData, createVault, restoreVault, wipeVault } from '../utils/keyManagement';
 import { FullScreenLoader } from './Loaders';
+import { openBrowserWindow, addWindowEventListeners } from '../utils/windows';
+
+
 
 const typingNotificationsTimestamp = {};
 
@@ -64,9 +67,17 @@ export default class Home extends PureComponent<Props> {
     this.joinChannel(currentChannel);
     this.pingChannel();
     this.createOnUserMessageHandler();
+    //TODO store ref to clear on componentWillUnmount
+    addWindowEventListeners(this.sendMessage);
     setTimeout(() => {
       this.getMyIdentities();
+      // Uncomment to test signing to status channels
+      //this.openBrowser('http://localhost:3000/sign-and-verify-message/sign');
     }, 1500);
+  }
+
+  openBrowser = (url) => {
+    openBrowserWindow(url);
   }
 
   pingChannel = () => {

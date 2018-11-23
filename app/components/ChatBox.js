@@ -41,27 +41,25 @@ function getYoutubeId(url) {
   return ID;
 }
 
-function addEmojis(message) {
-  let parts = message.split(' ');
-  for (var i = 1; i < parts.length; i += 2) {
-		if (parts[i] === ':heart_eyes:') {
-      parts[i] = <Emoji emoji={":santa::skin-tone-3:"} size={16} />;
-		} else {
-      parts[i] = <span className="match" key={i}>{parts[i]}</span>;
-		}
+// TODO use regex for code parsing / detection. Add new line detection for shift+enter
+const MessageRender = ({ message }) => {
+  const emojis = [];
+  let match;
+  const regex1 = RegExp(/:[\-a-zA-Z_]+:/g);
+  while ((match = regex1.exec(message)) !== null) {
+    emojis.push(<Emoji emoji={match[0]} size={16} />);
   }
-  return <div>{parts}</div>
-	// return (
-  //   <span dangerouslySetInnerHTML={{ __html : message.replace(':heart_eyes:', "<Emoji emoji=\:santa::skin-tone-3:\ size=16 />") }} />
-	// )
-}
 
-//TODO use regex for code parsing / detection. Add new line detection for shift+enter
-const MessageRender = ({ message }) => (
-  message[2] === "`" && SyntaxLookup[message.slice(0,2)]
-  ? <SyntaxHighlighter language={SyntaxLookup[message.slice(0,2)]} style={atomDark}>{message.slice(3)}</SyntaxHighlighter>
-  : <Linkify><span style={{ wordWrap: 'break-word', whiteSpace: 'pre-line' }}>{message}</span></Linkify>
-);
+  const parts = message.split(regex1);
+  parts.forEach((part, i) => {
+    parts[i] = <span className="match" key={i}>{part}{emojis[i]}</span>;
+  });
+
+  return (message[2] === "`" && SyntaxLookup[message.slice(0,2)]
+    ? <SyntaxHighlighter language={SyntaxLookup[message.slice(0,2)]} style={atomDark}>{message.slice(3)}</SyntaxHighlighter>
+    : <Linkify><span style={{ wordWrap: 'break-word', whiteSpace: 'pre-line' }}>{parts}</span></Linkify>)
+};
+
 class ChatBox extends PureComponent {
 
   state = {
@@ -80,7 +78,6 @@ class ChatBox extends PureComponent {
     const arrayBufferView = new Uint8Array(content);
     const blob = new Blob([ arrayBufferView ], { type: "image/jpeg" });
     const imgUrl = URL.createObjectURL(blob);
-    const image = `data:image/png;base64,${content.toString('base64')}`;
     this.setState({ imgUrl });
   };
 
@@ -93,35 +90,33 @@ class ChatBox extends PureComponent {
           <Avatar>
             <ListItemAvatar>
               <Avatar>
-                {pubkey && <Jazzicon diameter={40} seed={jsNumberForAddress(pubkey)} />}
+                {pubkey && <Jazzicon diameter={40} seed={jsNumberForAddress(pubkey)}/>}
               </Avatar>
             </ListItemAvatar>
           </Avatar>
-      <Emoji emoji=':santa::skin-tone-3:' size={16} />
-      <ListItemText primary={`${username}`} secondary={<Linkify>{addEmojis(message)}</Linkify>} />
-          <ListItemText primary={`${username}`} secondary={<MessageRender message={message} />} />
+          <ListItemText primary={`${username}`} secondary={<MessageRender message={message}/>}/>
         </ListItem>
         {hasYoutubeLink(message) &&
-         <ListItem>
-           <YouTube
-             videoId={getYoutubeId(message)}
-             opts={{height: '390', width: '640', playerVars: { autoplay: 0 }}}
-           />
-         </ListItem>
+        <ListItem>
+          <YouTube
+            videoId={getYoutubeId(message)}
+            opts={{ height: '390', width: '640', playerVars: { autoplay: 0 } }}
+          />
+        </ListItem>
         }
         {isSpotifyLink(message) &&
-         <ListItem>
-           <SpotifyPlayer
-             uri={message}
-             size={{'width': 300, 'height': 300}}
-             view='list'
-             theme='black'
-           />
-         </ListItem>
+        <ListItem>
+          <SpotifyPlayer
+            uri={message}
+            size={{ 'width': 300, 'height': 300 }}
+            view='list'
+            theme='black'
+          />
+        </ListItem>
         }
         {!!imgUrl && <img src={imgUrl} alt='ipfs' style={{ width: '100%' }}/>}
       </Fragment>
-    )
+    );
   };
 }
 

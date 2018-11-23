@@ -21,8 +21,6 @@ import { uploadFileAndSend } from '../utils/ipfs';
 
 import 'emoji-mart/css/emoji-mart.css';
 
-
-
 class WhoIsTyping extends PureComponent {
 
   whoIsTyping() {
@@ -96,6 +94,19 @@ class ChatRoom extends Component {
 
   render() {
     const { messages, sendMessage, currentChannel, usersTyping, typingEvent, channelUsers, allUsers, ipfs } = this.props;
+
+    const sortedUsers = Object.keys(channelUsers).sort((x,y) => {
+      let currentTime = (new Date().getTime());
+      let x_is_online = ((currentTime - allUsers[x].lastSeen) > 10*1000) ? 1 : -1;
+      let y_is_online = ((currentTime - allUsers[y].lastSeen) > 10*1000) ? 1 : -1;
+
+      let diff = x_is_online - y_is_online;
+      if (diff != 0) { return diff }
+      if (x.username < y.username) { return -1 }
+      if (x.username > y.username) { return 1 }
+      return 0;
+    })
+
     const {showEmojis} = this.state;
     return (
       <Grid container style={{ height: '100vh' }}>
@@ -184,15 +195,15 @@ class ChatRoom extends Component {
         </Grid>
         <Grid xs={4} item style={{ overflow: 'auto' }}>
           <List>
-            {Object.keys(channelUsers).map(user => (
+            {sortedUsers.map(user => (
               <ListItem button key={user}>
-            <span className="dot" style={{
-              'height': '10px',
-              'width': '11px',
-              'background-color': (allUsers[user].online ? 'lightgreen' : 'lightgrey'),
-              'border-radius': '50%',
-              'margin-right': '10px'
-            }}/>
+                <span className="dot" style={{
+                  'height': '10px',
+                  'width': '11px',
+                  'background-color': (((new Date().getTime()) - allUsers[user].lastSeen) > 10*1000 ? 'lightgrey' : 'lightgreen'),
+                  'border-radius': '50%',
+                  'margin-right': '10px'
+                }}/>
                 <ListItemAvatar>
                   <Avatar>
                     <Jazzicon diameter={40} seed={jsNumberForAddress(user)}/>

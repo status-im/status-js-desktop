@@ -14,8 +14,6 @@ import { getKeyData, createVault, restoreVault, wipeVault } from '../utils/keyMa
 import { FullScreenLoader } from './Loaders';
 import { openBrowserWindow, addWindowEventListeners } from '../utils/windows';
 
-
-
 const typingNotificationsTimestamp = {};
 
 const DEFAULT_CHANNEL = "mytest";

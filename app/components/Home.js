@@ -217,7 +217,7 @@ export default class Home extends PureComponent<Props> {
     const msg = JSON.parse(JSON.parse(data.payload)[1][0]);
     const fromUser = data.data.sig;
 
-    if (msg.type === 'ping' && fromUser !== publicKey) {
+    if (msg.type === 'ping') {
       const user = this.addOrUpdateUserKey(fromUser, data.username);
       this.addUserToChannel(channelName, user);
     }

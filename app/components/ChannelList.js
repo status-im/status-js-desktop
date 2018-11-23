@@ -4,7 +4,6 @@ import List from '@material-ui/core/List';
 import ChannelBox from './ChannelBox';
 import { isContactCode } from '../utils/parsers';
 
-
 const ChannelBoxes = ({ channels }) => (
   <div style={{ marginBottom: '50%' }}>
     {channels.map((channel) => (

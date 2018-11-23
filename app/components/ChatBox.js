@@ -7,6 +7,7 @@ import Avatar from '@material-ui/core/Avatar';
 import YouTube from 'react-youtube';
 import Linkify from 'react-linkify';
 import SpotifyPlayer from 'react-spotify-player';
+import { Emoji } from 'emoji-mart';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/styles/prism';
@@ -38,6 +39,21 @@ function getYoutubeId(url) {
     ID = url;
   }
   return ID;
+}
+
+function addEmojis(message) {
+  let parts = message.split(' ');
+  for (var i = 1; i < parts.length; i += 2) {
+		if (parts[i] === ':heart_eyes:') {
+      parts[i] = <Emoji emoji={":santa::skin-tone-3:"} size={16} />;
+		} else {
+      parts[i] = <span className="match" key={i}>{parts[i]}</span>;
+		}
+  }
+  return <div>{parts}</div>
+	// return (
+  //   <span dangerouslySetInnerHTML={{ __html : message.replace(':heart_eyes:', "<Emoji emoji=\:santa::skin-tone-3:\ size=16 />") }} />
+	// )
 }
 
 //TODO use regex for code parsing / detection. Add new line detection for shift+enter
@@ -81,6 +97,8 @@ class ChatBox extends PureComponent {
               </Avatar>
             </ListItemAvatar>
           </Avatar>
+      <Emoji emoji=':santa::skin-tone-3:' size={16} />
+      <ListItemText primary={`${username}`} secondary={<Linkify>{addEmojis(message)}</Linkify>} />
           <ListItemText primary={`${username}`} secondary={<MessageRender message={message} />} />
         </ListItem>
         {hasYoutubeLink(message) &&

@@ -88,6 +88,13 @@ class ChatRoom extends Component {
   }
 
   uploadFileDialog() {
+   this.fileInput.click();
+  }
+
+  fileChangedHandler(event) {
+    const file = event.target.files[0];
+    console.dir("handling file upload");
+    uploadFileAndSend(this.ipfs, file, this.sendMessage);
   }
 
   addEmoji(emoji, chatInput, setValue) {
@@ -101,6 +108,8 @@ class ChatRoom extends Component {
 
   render() {
     const { messages, sendMessage, currentChannel, usersTyping, typingEvent, channelUsers, allUsers, ipfs } = this.props;
+    this.sendMessage = sendMessage;
+    this.ipfs = ipfs;
 
     const sortedUsers = Object.keys(channelUsers).sort((x,y) => {
       let currentTime = (new Date().getTime());
@@ -117,6 +126,12 @@ class ChatRoom extends Component {
     const {showEmojis} = this.state;
     return (
       <Grid container style={{ height: '100vh' }}>
+        <input
+          type="file"
+          ref={(input) => { this.fileInput = input; }}
+          onChange={this.fileChangedHandler.bind(this)}
+          style={{display: 'none'}}
+        />
         <Grid xs={8} item>
           <Dropzone
             onDrop={(a, r) => {

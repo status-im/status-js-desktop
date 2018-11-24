@@ -90,9 +90,10 @@ class ChatRoom extends Component {
   }
 
   fileChangedHandler(event) {
+    const { ipfs, sendMessage } = this.props;
     const file = event.target.files[0];
     console.dir("handling file upload");
-    uploadFileAndSend(this.ipfs, file, this.sendMessage);
+    uploadFileAndSend(ipfs, file, sendMessage);
   }
 
   addEmoji(emoji, chatInput, setValue) {
@@ -107,8 +108,6 @@ class ChatRoom extends Component {
   render() {
     const { messages, sendMessage, currentChannel, usersTyping, typingEvent, channelUsers, allUsers, ipfs } = this.props;
     const { showEmojis, infoPanelActive } = this.state;
-    this.sendMessage = sendMessage;
-    this.ipfs = ipfs;
 
     const sortedUsers = Object.keys(channelUsers).sort((x,y) => {
       let currentTime = (new Date().getTime());

@@ -55,12 +55,14 @@ class Userlist extends PureComponent {
                <List>
                  {usersList.map(user => (
                    <ListItem button key={channelUsers[user].pubkey} style={{ display: 'flex' }}>
-                     {userOffline(channelUsers[user]) ? <OfflineBolt style={{ color: 'red' }} /> : <CheckCircle style={{ color: 'green' }} />}
+                     <div style={{ display: 'flex', alignContent: 'center', justifyContent: 'center', alignSelf: 'baseline', marginLeft: '7%' }}>
+                     {userOffline(channelUsers[user]) ? <OfflineBolt style={{ color: 'red', margin: 'auto' }} /> : <CheckCircle style={{ color: 'green', margin: 'auto' }} />}
                      <ListItemAvatar>
                        <Avatar>
                          <Jazzicon diameter={40} seed={jsNumberForAddress(channelUsers[user].pubkey)} />
                        </Avatar>
                      </ListItemAvatar>
+                     </div>
                      <ListItemText primary={channelUsers[user].username} secondary={`Last seen on ${new Date(channelUsers[user].lastSeen)}`}/>
                    </ListItem>
                  ))}

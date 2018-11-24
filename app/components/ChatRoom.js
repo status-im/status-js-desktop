@@ -3,21 +3,14 @@ import React, { Fragment, Component, PureComponent, createRef } from 'react';
 import { Formik } from 'formik';
 import autoscroll from 'autoscroll-react';
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
-import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Dropzone from 'react-dropzone';
-import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
 import { Picker } from 'emoji-mart';
-import InsertEmoticon from '@material-ui/icons/InsertEmoticon'
-import AddCircle from '@material-ui/icons/AddCircle'
 
-import ChatBox, { Emoji } from './ChatBox';
+import ChatBox from './ChatBox';
 import ChatHeader from './ChatHeader';
 import Userlist from './Userlist';
 import { uploadFileAndSend } from '../utils/ipfs';
@@ -89,7 +82,7 @@ class ChatRoom extends Component {
   }
 
   uploadFileDialog() {
-   this.fileInput.click();
+    this.fileInput.click();
   }
 
   fileChangedHandler(event) {
@@ -215,32 +208,11 @@ class ChatRoom extends Component {
                     )}
                   </Formik>
                 </Grid>
-                <Grid xs={3} item style={{ overflow: 'auto', borderLeftStyle: 'groove', minHeight: '100vh' }}><Userlist /></Grid>
+                <Grid xs={3} item style={{ overflow: 'auto', border: '1px solid lightgrey', minHeight: '100vh' }}><Userlist /></Grid>
               </Grid>
             </Grid>
           </Dropzone>
         </Grid>
-        {false && <Grid xs={4} item style={{ overflow: 'auto' }}>
-<List>
-              {sortedUsers.map(user => (
-                <ListItem button key={user}>
-                  <span className="dot" style={{
-                    'height': '10px',
-                    'width': '11px',
-                    'background-color': (((new Date().getTime()) - allUsers[user].lastSeen) > 10*1000 ? 'lightgrey' : 'lightgreen'),
-                    'border-radius': '50%',
-                    'margin-right': '10px'
-                  }}/>
-                  <ListItemAvatar>
-                    <Avatar>
-                      <Jazzicon diameter={40} seed={jsNumberForAddress(user)}/>
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText primary={allUsers[user].username}/>
-                </ListItem>
-              ))}
-            </List>
-          </Grid>}
       </div>
     )
   }

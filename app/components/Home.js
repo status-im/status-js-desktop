@@ -77,10 +77,10 @@ export default class Home extends PureComponent<Props> {
     openBrowserWindow(url);
   }
 
-  pingChannel = () => {
+  pingChannel = (channelName) => {
     const { currentChannel } = this.state;
     this.pingInterval = setInterval(() => {
-      status.sendJsonMessage(currentChannel, {type: "ping"});
+      status.sendJsonMessage(channelName || currentChannel, {type: "ping"});
     }, 5 * 1000)
   }
 
@@ -156,6 +156,7 @@ export default class Home extends PureComponent<Props> {
           }
         })
       });
+      this.pingChannel(channelName);
     });
   }
 

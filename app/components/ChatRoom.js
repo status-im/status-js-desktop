@@ -14,6 +14,8 @@ import Button from '@material-ui/core/Button';
 import Dropzone from 'react-dropzone';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
 import { Picker } from 'emoji-mart';
+import InsertEmoticon from '@material-ui/icons/InsertEmoticon'
+import AddCircle from '@material-ui/icons/AddCircle'
 
 import ChatBox, { Emoji } from './ChatBox';
 import ChatHeader from './ChatHeader';
@@ -86,14 +88,29 @@ class ChatRoom extends Component {
     this.setState(({showEmojis: !this.state.showEmojis}));
   }
 
+  uploadFileDialog() {
+   this.fileInput.click();
+  }
+
+  fileChangedHandler(event) {
+    const file = event.target.files[0];
+    console.dir("handling file upload");
+    uploadFileAndSend(this.ipfs, file, this.sendMessage);
+  }
+
   addEmoji(emoji, chatInput, setValue) {
     console.log(emoji);
     setValue('chatInput', `${chatInput}:${emoji.id}:`);
-    this.setState(({showEmojis: false}));
+    this.setState(({showEmojis: false}), () => {
+      this.nameInput.labelNode.focus();
+    });
+    // <Emoji emoji=":santa::skin-tone-3:" size={16} />
   }
 
   render() {
     const { messages, sendMessage, currentChannel, usersTyping, typingEvent, channelUsers, allUsers, ipfs } = this.props;
+    this.sendMessage = sendMessage;
+    this.ipfs = ipfs;
 
     const sortedUsers = Object.keys(channelUsers).sort((x,y) => {
       let currentTime = (new Date().getTime());
@@ -110,6 +127,12 @@ class ChatRoom extends Component {
     const {showEmojis} = this.state;
     return (
       <div style={{ width: '100%', flexWrap: 'nowrap', display: 'flex', boxSizing: 'border-box' }} >
+        <input
+          type="file"
+          ref={(input) => { this.fileInput = input; }}
+          onChange={this.fileChangedHandler.bind(this)}
+          style={{display: 'none'}}
+        />
         <Grid xs={12} item>
           <Dropzone
             onDrop={(a, r) => {
@@ -198,26 +221,26 @@ class ChatRoom extends Component {
           </Dropzone>
         </Grid>
         {false && <Grid xs={4} item style={{ overflow: 'auto' }}>
-          <List>
-            {sortedUsers.map(user => (
-              <ListItem button key={user}>
-                <span className="dot" style={{
-                  'height': '10px',
-                  'width': '11px',
-                  'background-color': (((new Date().getTime()) - allUsers[user].lastSeen) > 10*1000 ? 'lightgrey' : 'lightgreen'),
-                  'border-radius': '50%',
-                  'margin-right': '10px'
-                }}/>
-                <ListItemAvatar>
-                  <Avatar>
-                    <Jazzicon diameter={40} seed={jsNumberForAddress(user)}/>
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary={allUsers[user].username}/>
-              </ListItem>
-            ))}
-          </List>
-        </Grid>}
+<List>
+              {sortedUsers.map(user => (
+                <ListItem button key={user}>
+                  <span className="dot" style={{
+                    'height': '10px',
+                    'width': '11px',
+                    'background-color': (((new Date().getTime()) - allUsers[user].lastSeen) > 10*1000 ? 'lightgrey' : 'lightgreen'),
+                    'border-radius': '50%',
+                    'margin-right': '10px'
+                  }}/>
+                  <ListItemAvatar>
+                    <Avatar>
+                      <Jazzicon diameter={40} seed={jsNumberForAddress(user)}/>
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText primary={allUsers[user].username}/>
+                </ListItem>
+              ))}
+            </List>
+          </Grid>}
       </div>
     )
   }

@@ -12,6 +12,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Avatar from '@material-ui/core/Avatar';
 import CheckCircle from '@material-ui/icons/CheckCircle';
 import OfflineBolt from '@material-ui/icons/OfflineBolt';
+import Info from '@material-ui/icons/Info';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { ChatContext } from '../context';
 
@@ -42,7 +43,7 @@ class ChatHeader extends PureComponent {
   }
 
   render() {
-    const { currentChannel } = this.props;
+    const { currentChannel, toggleSidebar } = this.props;
     const { displayChannelStats } = this.state;
     return (
       <ChatContext.Consumer>
@@ -77,6 +78,7 @@ class ChatHeader extends PureComponent {
                  </Typography>
                  <div style={{ display: 'flex', alignItems: 'center' }}>
                    <PersonIcon style={{ color: grey[500] }} onClick={this.handleOpen}/><div style={{ color: grey[500] }}>{usersList.length}</div>
+                   <Info style={{ color: grey[500] }} onClick={toggleSidebar} />
                  </div>
                </CardContent>
              </div>

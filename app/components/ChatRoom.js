@@ -66,19 +66,23 @@ const keyDownHandler = (e, typingEvent, setValue, value) => {
 
 const AutoScrollList = autoscroll(List);
 const formStyle = { display: 'flex', justifyContent: 'center', alignItems: 'center', flexBasis: '10%' };
-const listStyle = { overflowY: 'auto', flexBasis: '76%', position: 'absolute', top: '72px', left: 0, right: 0, bottom: '67px' };
 const ChatRoomForm = createRef();
 class ChatRoom extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showEmojis: false
+      showEmojis: false,
+      infoPanelActive: true
     };
   }
 
   toggleEmojis(e) {
     e.preventDefault();
-    this.setState(({showEmojis: !this.state.showEmojis}));
+    this.setState(({ showEmojis: !this.state.showEmojis }));
+  }
+
+  toggleInfoPanel = () => {
+    this.setState({ infoPanelActive: !this.state.infoPanelActive })
   }
 
   uploadFileDialog() {
@@ -102,6 +106,7 @@ class ChatRoom extends Component {
 
   render() {
     const { messages, sendMessage, currentChannel, usersTyping, typingEvent, channelUsers, allUsers, ipfs } = this.props;
+    const { showEmojis, infoPanelActive } = this.state;
     this.sendMessage = sendMessage;
     this.ipfs = ipfs;
 
@@ -117,7 +122,6 @@ class ChatRoom extends Component {
       return 0;
     })
 
-    const {showEmojis} = this.state;
     return (
       <div style={{ width: '100%', flexWrap: 'nowrap', display: 'flex', boxSizing: 'border-box' }} >
         <input
@@ -146,11 +150,11 @@ class ChatRoom extends Component {
               alignItems="stretch"
               style={{ height: '100%' }}
             >
-              <ChatHeader currentChannel={currentChannel}/>
+              <ChatHeader currentChannel={currentChannel} toggleSidebar={this.toggleInfoPanel} />
               <Divider/>
               <Grid container wrap="nowrap">
-                <Grid xs={9} item style={{ overflowY: 'scroll' }}>
-                  <AutoScrollList style={{ height: '85vh', overflow: 'scroll' }}>
+                <Grid xs={infoPanelActive ? 9 : 12} item style={{ overflowY: 'scroll' }}>
+                  <AutoScrollList style={{ height: '75vh', overflow: 'scroll' }}>
                     {messages[currentChannel] && messages[currentChannel].map((message) => (
                       <Fragment key={message.data.payload}>
                         <ChatBox {...message} ipfs={ipfs}/>
@@ -208,7 +212,7 @@ class ChatRoom extends Component {
                     )}
                   </Formik>
                 </Grid>
-                <Grid xs={3} item style={{ overflow: 'auto', border: '1px solid lightgrey', minHeight: '100vh' }}><Userlist /></Grid>
+                <Grid xs={infoPanelActive ? 3 : 0} item style={{ overflow: 'auto', border: '1px solid lightgrey', minHeight: '100vh' }}>{infoPanelActive && <Userlist />}</Grid>
               </Grid>
             </Grid>
           </Dropzone>

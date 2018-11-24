@@ -111,15 +111,16 @@ class ChatRoom extends Component {
     this.sendMessage = sendMessage;
     this.ipfs = ipfs;
 
+    // TODO: terrible, later to be moved to another layer of the stack
     const sortedUsers = Object.keys(channelUsers).sort((x,y) => {
       let currentTime = (new Date().getTime());
       let x_is_online = ((currentTime - allUsers[x].lastSeen) > 10*1000) ? 1 : -1;
       let y_is_online = ((currentTime - allUsers[y].lastSeen) > 10*1000) ? 1 : -1;
 
-      let diff = x_is_online - y_is_online;
-      if (diff != 0) { return diff }
-      if (x.username < y.username) { return -1 }
-      if (x.username > y.username) { return 1 }
+      if (x_is_online > y_is_online) { return 1 }
+      if (x_is_online < y_is_online) { return -1 }
+      if (allUsers[x].username < allUsers[y].username) { return -1 }
+      if (allUsers[x].username > allUsers[y].username) { return 1 }
       return 0;
     })
 

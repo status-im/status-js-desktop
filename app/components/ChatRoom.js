@@ -17,6 +17,7 @@ import { Picker } from 'emoji-mart';
 
 import ChatBox, { Emoji } from './ChatBox';
 import ChatHeader from './ChatHeader';
+import Userlist from './Userlist';
 import { uploadFileAndSend } from '../utils/ipfs';
 
 import 'emoji-mart/css/emoji-mart.css';
@@ -89,7 +90,6 @@ class ChatRoom extends Component {
     console.log(emoji);
     setValue('chatInput', `${chatInput}:${emoji.id}:`);
     this.setState(({showEmojis: false}));
-    // <Emoji emoji=":santa::skin-tone-3:" size={16} />
   }
 
   render() {
@@ -109,8 +109,8 @@ class ChatRoom extends Component {
 
     const {showEmojis} = this.state;
     return (
-      <Grid container style={{ height: '100vh' }}>
-        <Grid xs={8} item>
+      <div style={{ width: '100%', flexWrap: 'nowrap', display: 'flex', boxSizing: 'border-box' }} >
+        <Grid xs={12} item>
           <Dropzone
             onDrop={(a, r) => {
               onDrop(a, r, ipfs, sendMessage);
@@ -132,68 +132,72 @@ class ChatRoom extends Component {
             >
               <ChatHeader currentChannel={currentChannel}/>
               <Divider/>
-              <AutoScrollList style={listStyle}>
-                {messages[currentChannel] && messages[currentChannel].map((message) => (
-                  <Fragment key={message.data.payload}>
-                    <ChatBox {...message} ipfs={ipfs}/>
-                    <li>
-                      <Divider/>
-                    </li>
-                  </Fragment>
-                ))}
-              </AutoScrollList>
-              <Formik
-                initialValues={{ chatInput: '' }}
-                onSubmit={(values, { setSubmitting, resetForm }) => {
-                  const { chatInput } = values;
-                  sendMessage(chatInput);
-                  resetForm();
-                  setSubmitting(false);
-                }}
-              >
-                {({
-                    values,
-                    errors,
-                    touched,
-                    handleChange,
-                    handleBlur,
-                    handleSubmit,
-                    setFieldValue
-                  }) => (
-                  <div className="chat-input"
-                       style={{ position: 'absolute', bottom: 0, left: 0, right: 0, paddingBottom: 10, 'background-color': 'white' }}>
-                    <form onSubmit={handleSubmit} style={formStyle} ref={ChatRoomForm}>
-                      <TextField
-                        id="chatInput"
-                        multiline
-                        style={{ width: 'auto', flexGrow: '0.95', margin: '2px 0 0 0' }}
-                        label="Type a message..."
-                        type="text"
-                        name="chatInput"
-                        margin="normal"
-                        variant="outlined"
-                        fullWidth
-                        onChange={handleChange}
-                        onKeyDown={(e) => keyDownHandler(e, typingEvent, setFieldValue, values.chatInput)}
-                        onBlur={handleBlur}
-                        value={values.chatInput || ''}
-                      />
-                      {showEmojis && <Picker onSelect={(emoji) => this.addEmoji(emoji, values.chatInput, setFieldValue)}
-                                             style={{ position: 'absolute', bottom: '80px', right: '20px' }}/>}
-                      <Button onClick={(e) => this.toggleEmojis(e)}>Smile</Button>
-                      {errors.chatInput && touched.chatInput && errors.chatInput}
-                    </form>
-                    <WhoIsTyping
-                      currentChannel={currentChannel}
-                      usersTyping={usersTyping}
-                      users={allUsers}/>
-                  </div>
-                )}
-              </Formik>
+              <Grid container wrap="nowrap">
+                <Grid xs={9} item style={{ overflowY: 'scroll' }}>
+                  <AutoScrollList style={{ height: '75vh', overflow: 'scroll' }}>
+                    {messages[currentChannel] && messages[currentChannel].map((message) => (
+                      <Fragment key={message.data.payload}>
+                        <ChatBox {...message} ipfs={ipfs}/>
+                        <li>
+                          <Divider/>
+                        </li>
+                      </Fragment>
+                    ))}
+                  </AutoScrollList>
+                  <Formik
+                    initialValues={{ chatInput: '' }}
+                    onSubmit={(values, { setSubmitting, resetForm }) => {
+                      const { chatInput } = values;
+                      sendMessage(chatInput);
+                      resetForm();
+                      setSubmitting(false);
+                    }}
+                  >
+                    {({
+                       values,
+                       errors,
+                       touched,
+                       handleChange,
+                       handleBlur,
+                       handleSubmit,
+                       setFieldValue
+                    }) => (
+                      <div className="chat-input">
+                        <form onSubmit={handleSubmit} style={formStyle} ref={ChatRoomForm}>
+                          <TextField
+                            id="chatInput"
+                            multiline
+                            style={{ width: 'auto', flexGrow: '0.95', margin: '2px 0 0 0' }}
+                            label="Type a message..."
+                            type="text"
+                            name="chatInput"
+                            margin="normal"
+                            variant="outlined"
+                            fullWidth
+                            onChange={handleChange}
+                            onKeyDown={(e) => keyDownHandler(e, typingEvent, setFieldValue, values.chatInput)}
+                            onBlur={handleBlur}
+                            value={values.chatInput || ''}
+                          />
+                          {showEmojis && <Picker onSelect={(emoji) => this.addEmoji(emoji, values.chatInput, setFieldValue)}
+                                           style={{ position: 'absolute', bottom: '80px', right: '20px' }}/>}
+                          <Button onClick={(e) => this.toggleEmojis(e)}>Smile</Button>
+                          {errors.chatInput && touched.chatInput && errors.chatInput}
+                        </form>
+                        <WhoIsTyping
+                          currentChannel={currentChannel}
+                          usersTyping={usersTyping}
+                          users={allUsers}/>
+                      </div>
+                    )}
+                  </Formik>
+                </Grid>
+                <Grid xs={3} item style={{ overflow: 'auto', borderLeftStyle: 'groove', minHeight: '100vh' }}><Userlist /></Grid>
+              </Grid>
             </Grid>
           </Dropzone>
         </Grid>
-        <Grid xs={4} item style={{ overflow: 'auto' }}>
+        {false && <Grid xs={4} item style={{ overflow: 'auto' }}>
           <List>
             {sortedUsers.map(user => (
               <ListItem button key={user}>
@@ -213,8 +217,8 @@ class ChatRoom extends Component {
               </ListItem>
             ))}
           </List>
-        </Grid>
-      </Grid>
+        </Grid>}
+      </div>
     )
   }
 }

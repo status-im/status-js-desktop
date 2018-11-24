@@ -14,6 +14,7 @@ import Button from '@material-ui/core/Button';
 import Dropzone from 'react-dropzone';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
 import { Picker } from 'emoji-mart';
+import InsertEmoticon from '@material-ui/icons/InsertEmoticon'
 
 import ChatBox, { Emoji } from './ChatBox';
 import ChatHeader from './ChatHeader';
@@ -178,9 +179,9 @@ class ChatRoom extends Component {
                         onBlur={handleBlur}
                         value={values.chatInput || ''}
                       />
-                      {showEmojis && <Picker onSelect={(emoji) => this.addEmoji(emoji, values.chatInput, setFieldValue)}
+                      {showEmojis && <Picker title="" onSelect={(emoji) => this.addEmoji(emoji, values.chatInput, setFieldValue)}
                                              style={{ position: 'absolute', bottom: '80px', right: '20px' }}/>}
-                      <Button onClick={(e) => this.toggleEmojis(e)}>Smile</Button>
+                      <Button onClick={(e) => this.toggleEmojis(e)}><InsertEmoticon /></Button>
                       {errors.chatInput && touched.chatInput && errors.chatInput}
                     </form>
                     <WhoIsTyping

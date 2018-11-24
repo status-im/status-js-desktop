@@ -193,7 +193,7 @@ class ChatRoom extends Component {
             </Grid>
           </Dropzone>
         </Grid>
-        <Grid xs={4} item style={{ overflow: 'auto' }}>
+        <Grid xs={4} item style={{ overflow: 'auto', borderLeft: '1px solid lightgrey' }}>
           <List>
             {sortedUsers.map(user => (
               <ListItem button key={user}>

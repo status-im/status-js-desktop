@@ -15,6 +15,7 @@ import Dropzone from 'react-dropzone';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
 import { Picker } from 'emoji-mart';
 import InsertEmoticon from '@material-ui/icons/InsertEmoticon'
+import AddCircle from '@material-ui/icons/AddCircle'
 
 import ChatBox, { Emoji } from './ChatBox';
 import ChatHeader from './ChatHeader';
@@ -86,10 +87,15 @@ class ChatRoom extends Component {
     this.setState(({showEmojis: !this.state.showEmojis}));
   }
 
+  uploadFileDialog() {
+  }
+
   addEmoji(emoji, chatInput, setValue) {
     console.log(emoji);
     setValue('chatInput', `${chatInput}:${emoji.id}:`);
-    this.setState(({showEmojis: false}));
+    this.setState(({showEmojis: false}), () => {
+      this.nameInput.labelNode.focus();
+    });
     // <Emoji emoji=":santa::skin-tone-3:" size={16} />
   }
 
@@ -164,8 +170,11 @@ class ChatRoom extends Component {
                   <div className="chat-input"
                        style={{ position: 'absolute', bottom: 0, left: 0, right: 0, paddingBottom: 10, 'background-color': 'white' }}>
                     <form onSubmit={handleSubmit} style={formStyle} ref={ChatRoomForm}>
+                      <Button onClick={(e) => this.uploadFileDialog()}><AddCircle /></Button>
                       <TextField
+                        autofocus
                         id="chatInput"
+                        ref={(input) => { this.nameInput = input; }}
                         multiline
                         style={{ width: 'auto', flexGrow: '0.95', margin: '2px 0 0 0' }}
                         label="Type a message..."
@@ -178,7 +187,8 @@ class ChatRoom extends Component {
                         onKeyDown={(e) => keyDownHandler(e, typingEvent, setFieldValue, values.chatInput)}
                         onBlur={handleBlur}
                         value={values.chatInput || ''}
-                      />
+                      >
+                      </TextField>
                       {showEmojis && <Picker title="" onSelect={(emoji) => this.addEmoji(emoji, values.chatInput, setFieldValue)}
                                              style={{ position: 'absolute', bottom: '80px', right: '20px' }}/>}
                       <Button onClick={(e) => this.toggleEmojis(e)}><InsertEmoticon /></Button>

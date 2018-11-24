@@ -54,7 +54,7 @@ class Userlist extends PureComponent {
              <div>
                <List>
                  {usersList.map(user => (
-                   <ListItem button key={channelUsers[user].pubkey} style={{ display: 'flex', flexDirection: 'column' }}>
+                   <ListItem button key={channelUsers[user].pubkey} style={{ display: 'flex' }}>
                      {userOffline(channelUsers[user]) ? <OfflineBolt style={{ color: 'red' }} /> : <CheckCircle style={{ color: 'green' }} />}
                      <ListItemAvatar>
                        <Avatar>

@@ -150,7 +150,7 @@ class ChatRoom extends Component {
               <Divider/>
               <Grid container wrap="nowrap">
                 <Grid xs={9} item style={{ overflowY: 'scroll' }}>
-                  <AutoScrollList style={{ height: '75vh', overflow: 'scroll' }}>
+                  <AutoScrollList style={{ height: '85vh', overflow: 'scroll' }}>
                     {messages[currentChannel] && messages[currentChannel].map((message) => (
                       <Fragment key={message.data.payload}>
                         <ChatBox {...message} ipfs={ipfs}/>

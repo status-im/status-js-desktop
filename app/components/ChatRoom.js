@@ -9,6 +9,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Dropzone from 'react-dropzone';
 import { Picker } from 'emoji-mart';
+import AddCircle from '@material-ui/icons/AddCircle'
 
 import ChatBox from './ChatBox';
 import ChatHeader from './ChatHeader';
@@ -183,6 +184,7 @@ class ChatRoom extends Component {
                     }) => (
                       <div className="chat-input">
                         <form onSubmit={handleSubmit} style={formStyle} ref={ChatRoomForm}>
+                          <Button onClick={(e) => this.uploadFileDialog()}><AddCircle /></Button>
                           <TextField
                             id="chatInput"
                             multiline

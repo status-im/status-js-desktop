@@ -38,7 +38,7 @@ class WhoIsTyping extends PureComponent {
   render() {
     const userList = this.whoIsTyping();
     return (
-      <div>
+      <div style={{ textAlign: 'center' }}>
         {!userList.length ? "" : `${userList.join(',')} is typing`}
       </div>
     )

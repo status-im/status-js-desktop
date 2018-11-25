@@ -68,6 +68,7 @@ const keyDownHandler = (e, typingEvent, setValue, value) => {
 const AutoScrollList = autoscroll(List);
 const formStyle = { display: 'flex', justifyContent: 'center', alignItems: 'center', flexBasis: '10%' };
 const ChatRoomForm = createRef();
+const messagesOffset = 185;
 class ChatRoom extends Component {
   constructor(props) {
     super(props);
@@ -103,12 +104,12 @@ class ChatRoom extends Component {
     this.setState(({showEmojis: false}), () => {
       this.nameInput.labelNode.focus();
     });
-    // <Emoji emoji=":santa::skin-tone-3:" size={16} />
   }
 
   render() {
     const { messages, sendMessage, currentChannel, usersTyping, typingEvent, channelUsers, allUsers, ipfs } = this.props;
     const { showEmojis, infoPanelActive } = this.state;
+    const messagesHeight = `${window.innerHeight - messagesOffset}px`;
 
     const sortedUsers = Object.keys(channelUsers).sort((x,y) => {
       let currentTime = (new Date().getTime());
@@ -154,7 +155,7 @@ class ChatRoom extends Component {
               <Divider/>
               <Grid container wrap="nowrap">
                 <Grid xs={infoPanelActive ? 9 : 12} item style={{ overflowY: 'scroll' }}>
-                  <AutoScrollList style={{ height: '75vh', overflow: 'scroll' }}>
+                  <AutoScrollList style={{ height: messagesHeight, overflow: 'scroll' }}>
                     {messages[currentChannel] && messages[currentChannel].map((message) => (
                       <Fragment key={message.data.payload}>
                         <ChatBox {...message} ipfs={ipfs}/>

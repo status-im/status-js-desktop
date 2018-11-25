@@ -68,6 +68,7 @@ const keyDownHandler = (e, typingEvent, setValue, value) => {
 const AutoScrollList = autoscroll(List);
 const formStyle = { display: 'flex', justifyContent: 'center', alignItems: 'center', flexBasis: '10%' };
 const ChatRoomForm = createRef();
+const NameInput = createRef();
 const messagesOffset = 185;
 class ChatRoom extends Component {
   constructor(props) {
@@ -79,7 +80,6 @@ class ChatRoom extends Component {
   }
 
   toggleEmojis(e) {
-    e.preventDefault();
     this.setState(({ showEmojis: !this.state.showEmojis }));
   }
 
@@ -102,7 +102,7 @@ class ChatRoom extends Component {
     console.log(emoji);
     setValue('chatInput', `${chatInput}:${emoji.id}:`);
     this.setState(({showEmojis: false}), () => {
-      this.nameInput.labelNode.focus();
+      NameInput.current.labelNode.focus();
     });
   }
 
@@ -188,6 +188,7 @@ class ChatRoom extends Component {
                           <Button onClick={(e) => this.uploadFileDialog()}><AddCircle /></Button>
                           <TextField
                             id="chatInput"
+                            ref={NameInput}
                             multiline
                             style={{ width: 'auto', flexGrow: '0.95', margin: '2px 0 0 0' }}
                             label="Type a message..."

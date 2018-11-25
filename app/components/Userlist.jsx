@@ -15,6 +15,20 @@ import { ChatContext } from '../context';
 const online = green['500'];
 const offline = blueGrey['500'];
 const scrolling = { height: '100vh', overflow: 'scroll' };
+
+const sortUsers = (channelUsers, allUsers) => Object.keys(channelUsers).sort((x,y) => {
+  const currentTime = (new Date().getTime());
+  const xIsOnline = ((currentTime - allUsers[x].lastSeen) > 10*1000) ? 1 : -1;
+  const yIsOnline = ((currentTime - allUsers[y].lastSeen) > 10*1000) ? 1 : -1;
+
+  const diff = xIsOnline - yIsOnline;
+  if (diff != 0) { return diff }
+  if (x.username < y.username) { return -1 }
+  if (x.username > y.username) { return 1 }
+  return 0;
+});
+
+
 class Userlist extends PureComponent {
 
   componentDidMount() {
@@ -32,9 +46,9 @@ class Userlist extends PureComponent {
   render() {
     return (
       <ChatContext.Consumer>
-        {({ channels, currentChannel }) => {
+        {({ channels, currentChannel, users }) => {
            const channelUsers = channels[currentChannel].users;
-           const usersList = Object.keys(channelUsers);
+           const usersList = sortUsers(channelUsers, users);
            const currentTime = new Date().getTime();
            const userOffline = user => currentTime - user.lastSeen > 10*1000
            return (

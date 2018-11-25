@@ -111,18 +111,6 @@ class ChatRoom extends Component {
     const { showEmojis, infoPanelActive } = this.state;
     const messagesHeight = `calc(100vh - ${messagesOffset}px)`;
 
-    const sortedUsers = Object.keys(channelUsers).sort((x,y) => {
-      let currentTime = (new Date().getTime());
-      let x_is_online = ((currentTime - allUsers[x].lastSeen) > 10*1000) ? 1 : -1;
-      let y_is_online = ((currentTime - allUsers[y].lastSeen) > 10*1000) ? 1 : -1;
-
-      let diff = x_is_online - y_is_online;
-      if (diff != 0) { return diff }
-      if (x.username < y.username) { return -1 }
-      if (x.username > y.username) { return 1 }
-      return 0;
-    })
-
     return (
       <div style={{ width: '100%', flexWrap: 'nowrap', display: 'flex', boxSizing: 'border-box' }} >
         <input

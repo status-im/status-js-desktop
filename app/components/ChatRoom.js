@@ -109,7 +109,7 @@ class ChatRoom extends Component {
   render() {
     const { messages, sendMessage, currentChannel, usersTyping, typingEvent, channelUsers, allUsers, ipfs } = this.props;
     const { showEmojis, infoPanelActive } = this.state;
-    const messagesHeight = `${window.innerHeight - messagesOffset}px`;
+    const messagesHeight = `calc(100vh - ${messagesOffset}px)`;
 
     const sortedUsers = Object.keys(channelUsers).sort((x,y) => {
       let currentTime = (new Date().getTime());

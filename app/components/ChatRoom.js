@@ -213,7 +213,7 @@ class ChatRoom extends Component {
                     )}
                   </Formik>
                 </Grid>
-                <Grid xs={infoPanelActive ? 3 : 0} item style={{ overflow: 'auto', border: '1px solid lightgrey', minHeight: '100vh' }}>{infoPanelActive && <Userlist />}</Grid>
+                <Grid xs={infoPanelActive ? 3 : false} item style={{ overflow: 'auto', borderLeft: '1px solid lightgrey', minHeight: '100vh' }}>{infoPanelActive && <Userlist />}</Grid>
               </Grid>
             </Grid>
           </Dropzone>

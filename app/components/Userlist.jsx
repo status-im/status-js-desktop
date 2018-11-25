@@ -13,6 +13,7 @@ import Avatar from '@material-ui/core/Avatar';
 import CheckCircle from '@material-ui/icons/CheckCircle';
 import OfflineBolt from '@material-ui/icons/OfflineBolt';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
+import Tooltip from '@material-ui/core/Tooltip';
 import { ChatContext } from '../context';
 
 class Userlist extends PureComponent {
@@ -54,16 +55,18 @@ class Userlist extends PureComponent {
              <div>
                <List>
                  {usersList.map(user => (
-                   <ListItem button key={channelUsers[user].pubkey} style={{ display: 'flex' }}>
-                     <div style={{ display: 'flex', alignContent: 'center', justifyContent: 'center', alignSelf: 'baseline', marginLeft: '7%' }}>
-                     {userOffline(channelUsers[user]) ? <OfflineBolt style={{ color: 'red', margin: 'auto' }} /> : <CheckCircle style={{ color: 'green', margin: 'auto' }} />}
-                     <ListItemAvatar>
-                       <Avatar>
-                         <Jazzicon diameter={40} seed={jsNumberForAddress(channelUsers[user].pubkey)} />
-                       </Avatar>
-                     </ListItemAvatar>
+                   <ListItem button key={channelUsers[user].pubkey} style={{ display: 'flex', paddingLeft: '5px' }}>
+                     <div style={{ display: 'flex' }}>
+                       {userOffline(channelUsers[user]) ? <OfflineBolt style={{ color: 'red', margin: 'auto' }} /> : <CheckCircle style={{ color: 'green', margin: 'auto' }} />}
+                       <ListItemAvatar>
+                         <Avatar>
+                           <Jazzicon diameter={40} seed={jsNumberForAddress(channelUsers[user].pubkey)} />
+                         </Avatar>
+                       </ListItemAvatar>
                      </div>
-                     <ListItemText primary={channelUsers[user].username} secondary={`Last seen on ${new Date(channelUsers[user].lastSeen)}`}/>
+                     <Tooltip title={`Last seen on ${new Date(channelUsers[user].lastSeen)}`} placement="top-start">
+                       <ListItemText primary={channelUsers[user].username} />
+                     </Tooltip>
                    </ListItem>
                  ))}
                </List>

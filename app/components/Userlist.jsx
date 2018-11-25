@@ -14,6 +14,7 @@ import { ChatContext } from '../context';
 
 const online = green['500'];
 const offline = blueGrey['500'];
+const scrolling = { height: '100vh', overflow: 'scroll' };
 class Userlist extends PureComponent {
 
   componentDidMount() {
@@ -37,8 +38,8 @@ class Userlist extends PureComponent {
            const currentTime = new Date().getTime();
            const userOffline = user => currentTime - user.lastSeen > 10*1000
            return (
-             <div>
-               <List>
+             <div style={scrolling}>
+               <List style={scrolling}>
                  {usersList.map(user => (
                    <ListItem button key={channelUsers[user].pubkey} style={{ display: 'flex', paddingLeft: '5px' }}>
                      <div style={{ display: 'flex' }}>

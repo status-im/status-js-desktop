@@ -1,26 +1,20 @@
 import React, { PureComponent } from 'react';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
-import grey from '@material-ui/core/colors/grey';
-import PersonIcon from '@material-ui/icons/PersonOutline';
-import Dialog from '@material-ui/core/Dialog';
+import blueGrey from '@material-ui/core/colors/blueGrey';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Avatar from '@material-ui/core/Avatar';
-import CheckCircle from '@material-ui/icons/CheckCircle';
-import OfflineBolt from '@material-ui/icons/OfflineBolt';
+import FiberManualRecord from '@material-ui/icons/FiberManualRecord';
+import FiberManualRecordOutlined from '@material-ui/icons/FiberManualRecordOutlined';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
+import green from '@material-ui/core/colors/green';
 import Tooltip from '@material-ui/core/Tooltip';
 import { ChatContext } from '../context';
 
+const online = green['500'];
+const offline = blueGrey['500'];
 class Userlist extends PureComponent {
-
-  state = {
-    displayChannelStats: false
-  }
 
   componentDidMount() {
     this.heartBeat();
@@ -30,20 +24,11 @@ class Userlist extends PureComponent {
     clearInterval(this.heartBeatId);
   }
 
-  handleClose = () => {
-    this.setState({ displayChannelStats: false });
-  }
-
-  handleOpen = () => {
-    this.setState({ displayChannelStats: true });
-  }
-
   heartBeat() {
     this.heartBeatId = setInterval(() => { this.forceUpdate() }, 5000)
   }
 
   render() {
-    const { displayChannelStats } = this.state;
     return (
       <ChatContext.Consumer>
         {({ channels, currentChannel }) => {
@@ -57,7 +42,7 @@ class Userlist extends PureComponent {
                  {usersList.map(user => (
                    <ListItem button key={channelUsers[user].pubkey} style={{ display: 'flex', paddingLeft: '5px' }}>
                      <div style={{ display: 'flex' }}>
-                       {userOffline(channelUsers[user]) ? <OfflineBolt style={{ color: 'red', margin: 'auto' }} /> : <CheckCircle style={{ color: 'green', margin: 'auto' }} />}
+                       {userOffline(channelUsers[user]) ? <FiberManualRecordOutlined style={{ color: offline, margin: 'auto' }} /> : <FiberManualRecord style={{ color: online, margin: 'auto' }} />}
                        <ListItemAvatar>
                          <Avatar>
                            <Jazzicon diameter={40} seed={jsNumberForAddress(channelUsers[user].pubkey)} />

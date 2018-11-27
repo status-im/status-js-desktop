@@ -12907,7 +12907,7 @@ react-spotify-player@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/react-spotify-player/-/react-spotify-player-1.0.4.tgz#b840821223b959795f51cbe65759d0966ee326a7"
 
-react-syntax-highlighter@^10.1.1:
+react-syntax-highlighter@^10.0.1:
   version "10.1.1"
   resolved "https://registry.yarnpkg.com/react-syntax-highlighter/-/react-syntax-highlighter-10.1.1.tgz#1bf7ad4f2f16d2978b04594407b670671b4d3316"
   dependencies:

@@ -1,6 +1,7 @@
 // @flow
 import React, { PureComponent, Fragment } from 'react';
 import StatusJS from 'status-js-api';
+import Murmur from 'murmur-client';
 import IPFS from 'ipfs';
 import { isNil } from 'lodash';
 import Grid from '@material-ui/core/Grid';
@@ -18,6 +19,7 @@ const typingNotificationsTimestamp = {};
 
 const DEFAULT_CHANNEL = "mytest";
 const URL = "ws://localhost:8546";
+const murmur = new Murmur();
 const status = new StatusJS();
 
 type Props = {};
@@ -50,7 +52,9 @@ export default class Home extends PureComponent<Props> {
   connect = async (account) => {
     if (!account) {
       this.setState({ loading: true });
-      status.connect(URL);
+      //status.connect(URL);
+      status.connectToProvider(murmur.provider);
+      murmur.start();
       return this.onConnect();
     }
 

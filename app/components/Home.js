@@ -1,7 +1,6 @@
 // @flow
 import React, { PureComponent, Fragment } from 'react';
 import StatusJS from 'status-js-api';
-import Murmur from 'murmur-client';
 import IPFS from 'ipfs';
 import { isNil } from 'lodash';
 import Grid from '@material-ui/core/Grid';
@@ -17,12 +16,54 @@ import { openBrowserWindow, addWindowEventListeners } from '../utils/windows';
 
 const typingNotificationsTimestamp = {};
 
+import uuid from 'uuid/v4';
+
+const ipcRenderer = require('electron').ipcRenderer;
+
+class Provider {
+
+  constructor() {
+    this.notificationCallbacks = [];
+    ipcRenderer.on('rpc-notification', (event, result) => {
+      this.notificationCallbacks.forEach((callback) => {
+        callback(JSON.parse(result));
+      });
+    })
+  }
+
+  send(payload, callback) {
+    return this.sendAsync(payload, callback);
+  }
+
+  sendAsync(payload, callback) {
+    let id = uuid();
+    ipcRenderer.once('rpc-' + id, (event, response) => {
+      callback(null, JSON.parse(response))
+    });
+    ipcRenderer.send('rpc', id, JSON.stringify(payload));
+  }
+
+  on(type, cb) {
+    if (type !== 'data') return;
+    ipcRenderer.send('rpc-event', type);
+    this.notificationCallbacks.push(cb)
+  }
+
+}
+
 const DEFAULT_CHANNEL = "mytest";
 const URL = "ws://localhost:8546";
-const murmur = new Murmur();
 const status = new StatusJS();
 
 type Props = {};
+
+function sendRequest(data, cb) {
+  let id = uuid();
+  ipcRenderer.on('rpc-' + id, (data) => {
+    cb(data);
+  });
+  ipcRenderer.send('rpc', id, data);
+}
 
 export default class Home extends PureComponent<Props> {
   props: Props;
@@ -52,9 +93,8 @@ export default class Home extends PureComponent<Props> {
   connect = async (account) => {
     if (!account) {
       this.setState({ loading: true });
-      //status.connect(URL);
-      status.connectToProvider(murmur.provider);
-      murmur.start();
+      let provider = new Provider();
+      status.connectToProvider(provider);
       return this.onConnect();
     }
 
@@ -82,10 +122,10 @@ export default class Home extends PureComponent<Props> {
   }
 
   pingChannel = (channelName) => {
-    const { currentChannel } = this.state;
-    this.pingInterval = setInterval(() => {
-      status.sendJsonMessage(channelName || currentChannel, {type: "ping"});
-    }, 5 * 1000)
+    // const { currentChannel } = this.state;
+    // this.pingInterval = setInterval(() => {
+    //   status.sendJsonMessage(channelName || currentChannel, {type: "ping"});
+    // }, 5 * 1000)
   }
 
   setupKeyringController = async (password, mnemonic) => {
@@ -251,6 +291,7 @@ export default class Home extends PureComponent<Props> {
   }
 
   typingEvent = () => {
+    return;
     const { currentChannel } = this.state;
     const now = (new Date().getTime());
 

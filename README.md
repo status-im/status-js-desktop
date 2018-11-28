@@ -1,6 +1,10 @@
 <p align="center">
 A Status client reference implementation using <a href="https://github.com/status-im/status-js">Status-JS</a>.
 </p>
+<p align="center">
+<strong>WIP. DO NOT USE IN PRODUCTION. HIGH RISK ⚠</strong>
+</p>
+<br />
 
 <div align="center">
 <br>

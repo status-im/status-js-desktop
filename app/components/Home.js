@@ -122,10 +122,10 @@ export default class Home extends PureComponent<Props> {
   }
 
   pingChannel = (channelName) => {
-    // const { currentChannel } = this.state;
-    // this.pingInterval = setInterval(() => {
-    //   status.sendJsonMessage(channelName || currentChannel, {type: "ping"});
-    // }, 5 * 1000)
+    const { currentChannel } = this.state;
+    this.pingInterval = setInterval(() => {
+      status.sendJsonMessage(channelName || currentChannel, {type: "ping"});
+    }, 5 * 1000)
   }
 
   setupKeyringController = async (password, mnemonic) => {
@@ -291,7 +291,6 @@ export default class Home extends PureComponent<Props> {
   }
 
   typingEvent = () => {
-    return;
     const { currentChannel } = this.state;
     const now = (new Date().getTime());
 

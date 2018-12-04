@@ -276,7 +276,7 @@ export default class Home extends PureComponent<Props> {
                 setupKeyringController={setupKeyringController}
                 keyStore={keyStore}
                 wipeKeyStore={wipeKeyStore} />
-            : <Grid container spacing={0}>
+            : <div style={{ width: '100%', flexWrap: 'nowrap', display: 'flex', boxSizing: 'border-box' }} >
               <Grid item xs={3}>
                 {!isNil(channels) &&
                   <ContextPanel
@@ -295,7 +295,7 @@ export default class Home extends PureComponent<Props> {
                     ipfs={ipfs}
                   />
               </Grid>
-            </Grid>}
+            </div>}
          </Fragment>}
       </ChatContext.Provider>
     );

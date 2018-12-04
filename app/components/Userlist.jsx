@@ -21,10 +21,10 @@ const sortUsers = (channelUsers, allUsers) => Object.keys(channelUsers).sort((x,
   const xIsOnline = ((currentTime - allUsers[x].lastSeen) > 10*1000) ? 1 : -1;
   const yIsOnline = ((currentTime - allUsers[y].lastSeen) > 10*1000) ? 1 : -1;
 
-  const diff = xIsOnline - yIsOnline;
-  if (diff != 0) { return diff }
-  if (x.username < y.username) { return -1 }
-  if (x.username > y.username) { return 1 }
+  if (xIsOnline > yIsOnline) return 1;
+  if (xIsOnline < yIsOnline) return -1;
+  if (x.username < y.username) return -1;
+  if (x.username > y.username) return 1;
   return 0;
 });
 

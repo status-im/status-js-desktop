@@ -110,7 +110,6 @@ class ChatRoom extends Component {
     const { messages, sendMessage, currentChannel, usersTyping, typingEvent, channelUsers, allUsers, ipfs } = this.props;
     const { showEmojis, infoPanelActive } = this.state;
     const messagesHeight = `calc(100vh - ${messagesOffset}px)`;
-
     return (
       <div style={{ width: '100%', flexWrap: 'nowrap', display: 'flex', boxSizing: 'border-box' }} >
         <input

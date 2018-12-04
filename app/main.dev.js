@@ -72,6 +72,7 @@ app.on('ready', async () => {
     show: false,
     width: 1024,
     height: 728,
+    titleBarStyle: 'hiddenInset',
     icon: path.join(__dirname, 'icons/64x64.png')
   });
 

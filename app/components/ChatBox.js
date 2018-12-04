@@ -58,7 +58,7 @@ function displayImage(text) {
 const MessageRender = ({ message }) => {
   const emojis = [];
   let match;
-  const regex1 = RegExp(/:[\-a-zA-Z_|+0-9]+:/g);
+  const regex1 = RegExp(/:[\-a-zA-Z_+0-9]+:/g);
   while ((match = regex1.exec(message)) !== null) {
     emojis.push(<Emoji emoji={match[0]} size={16} />);
   }

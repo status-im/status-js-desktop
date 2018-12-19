@@ -73,7 +73,7 @@ app.on('ready', async () => {
     width: 1024,
     height: 728,
     titleBarStyle: 'hiddenInset',
-    icon: path.join(__dirname, 'icons/64x64.png')
+    icon: path.join(__dirname, 'icons/png/64x64.png')
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);

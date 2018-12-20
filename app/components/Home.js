@@ -57,14 +57,6 @@ const status = new StatusJS();
 
 type Props = {};
 
-function sendRequest(data, cb) {
-  let id = uuid();
-  ipcRenderer.on('rpc-' + id, (data) => {
-    cb(data);
-  });
-  ipcRenderer.send('rpc', id, data);
-}
-
 export default class Home extends PureComponent<Props> {
   props: Props;
 

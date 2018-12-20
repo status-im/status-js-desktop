@@ -15,9 +15,6 @@ A Status client reference implementation using <a href="https://github.com/statu
 
 ## Install
 
-Currently Status-JS-desktop relies on Geth, ensure that [**Geth**](https://github.com/ethereum/go-ethereum/wiki/Installing-Geth) is installed. 
-In the future we plan for this to be bundled with status-js-desktop or use [**MurMur**](https://github.com/status-im/murmur).
-
 clone the repo via git:
 
 ```bash
@@ -32,12 +29,6 @@ $ yarn
 ```
 
 ## Run
-
-Start Geth with shh flags
-
-```bash
-$ geth --testnet --syncmode=light --ws --wsport=8546 --wsaddr=localhost --wsorigins=file:// --maxpeers=25 --shh --shh.pow=0.002 --wsapi=eth,web3,net,shh,debug console
-```
 
 Start the app in the `dev` environment. This starts the renderer process in [**hot-module-replacement**](https://webpack.js.org/guides/hmr-react/) mode and starts a webpack dev server that sends hot updates to the renderer process:
 

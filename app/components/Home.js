@@ -16,6 +16,41 @@ import { openBrowserWindow, addWindowEventListeners } from '../utils/windows';
 
 const typingNotificationsTimestamp = {};
 
+import uuid from 'uuid/v4';
+
+const ipcRenderer = require('electron').ipcRenderer;
+
+class Provider {
+
+  constructor() {
+    this.notificationCallbacks = [];
+    ipcRenderer.on('rpc-notification', (event, result) => {
+      this.notificationCallbacks.forEach((callback) => {
+        callback(JSON.parse(result));
+      });
+    })
+  }
+
+  send(payload, callback) {
+    return this.sendAsync(payload, callback);
+  }
+
+  sendAsync(payload, callback) {
+    let id = uuid();
+    ipcRenderer.once('rpc-' + id, (event, response) => {
+      callback(null, JSON.parse(response))
+    });
+    ipcRenderer.send('rpc', id, JSON.stringify(payload));
+  }
+
+  on(type, cb) {
+    if (type !== 'data') return;
+    ipcRenderer.send('rpc-event', type);
+    this.notificationCallbacks.push(cb)
+  }
+
+}
+
 const DEFAULT_CHANNEL = "mytest";
 const URL = "ws://localhost:8546";
 const status = new StatusJS();
@@ -50,7 +85,8 @@ export default class Home extends PureComponent<Props> {
   connect = async (account) => {
     if (!account) {
       this.setState({ loading: true });
-      status.connect(URL);
+      let provider = new Provider();
+      status.connectToProvider(provider);
       return this.onConnect();
     }
 

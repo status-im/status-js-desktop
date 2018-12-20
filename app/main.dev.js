@@ -15,6 +15,12 @@ import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import log from 'electron-log';
 import MenuBuilder from './menu';
+import Murmur from 'murmur-client';
+
+const {ipcMain}     	= require('electron');
+
+const murmur = new Murmur();
+murmur.start();
 
 export default class AppUpdater {
   constructor() {
@@ -75,6 +81,18 @@ app.on('ready', async () => {
     titleBarStyle: 'hiddenInset',
     icon: path.join(__dirname, 'icons/png/64x64.png')
   });
+
+  setTimeout(function() {
+    murmur.provider.on('data', (result) => {
+      mainWindow.send("rpc-notification", JSON.stringify(result));
+    })
+
+    ipcMain.on("rpc", (event, id, payload) => {
+      murmur.provider.sendAsync(JSON.parse(payload), (err, result) => {
+        mainWindow.send("rpc-" + id, JSON.stringify(result));
+      });
+    });
+  }, 2000);
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
 

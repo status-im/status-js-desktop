@@ -10,7 +10,7 @@ import SpotifyPlayer from 'react-spotify-player';
 import { Emoji } from 'emoji-mart';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { atomDark } from 'react-syntax-highlighter/dist/styles/prism';
+import { atomDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import { Matcher } from '@areknawo/rex'
 import SyntaxLookup from '../utils/syntaxLookup';
 import { getFile } from '../utils/ipfs';

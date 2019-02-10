@@ -292,7 +292,7 @@
     "uuid": "^3.3.2"
   },
   "engines": {
-    "node": ">=10.x <11",
+    "node": ">=10.x <12",
     "yarn": ">=1.x"
   },
   "collective": {
